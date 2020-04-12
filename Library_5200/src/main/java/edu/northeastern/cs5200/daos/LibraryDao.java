@@ -32,6 +32,10 @@ public interface LibraryDao {
     void createMember(Member member);
     void createUser(User user);
 
+    boolean hasValidLibraryCard(Member member);
+    boolean checkOutBook(Member member, Book book);
+    BookCopy findAvailableCopy(Book book);
+
 }
 
 

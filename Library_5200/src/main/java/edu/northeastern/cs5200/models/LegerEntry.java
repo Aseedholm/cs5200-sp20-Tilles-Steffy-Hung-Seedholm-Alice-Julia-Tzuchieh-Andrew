@@ -25,7 +25,20 @@ public class LegerEntry {
         this.dateReturned = dateReturned;
     }
 
+    public LegerEntry(Integer memberId, Integer bookCopyId, Date dateBorrowed, Date dateReturned) {
+        LegerId newId = new LegerId(memberId, bookCopyId);
+        this.id = newId;
+        this.dateBorrowed = dateBorrowed;
+        this.dateReturned = dateReturned;
+    }
 
+    public LegerId getId() {
+        return id;
+    }
+
+    public void setId(LegerId id) {
+        this.id = id;
+    }
 
     public Date getDateBorrowed() {
         return dateBorrowed;

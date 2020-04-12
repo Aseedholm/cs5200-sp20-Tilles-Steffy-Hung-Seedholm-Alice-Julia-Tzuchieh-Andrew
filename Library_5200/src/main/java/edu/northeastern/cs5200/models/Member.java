@@ -2,6 +2,7 @@ package edu.northeastern.cs5200.models;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -20,10 +21,8 @@ public class Member extends User {
     @OneToMany(mappedBy="sponsoredBy")
     private Set<Member> recipientsOfSponsorship;
 
-
-
     public Member() {
-
+        this.recipientsOfSponsorship = new HashSet<>();
     }
 
     public Member(Integer id, String firstName, String lastName, String username, String password, String email,

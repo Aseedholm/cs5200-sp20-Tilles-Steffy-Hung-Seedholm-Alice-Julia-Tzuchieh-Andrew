@@ -2,6 +2,7 @@ package edu.northeastern.cs5200.models;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 
@@ -22,7 +23,7 @@ public class Author {
     private Set<Book> booksWritten;
 
     public Author() {
-
+        this.booksWritten = new HashSet<>();
     }
 
 

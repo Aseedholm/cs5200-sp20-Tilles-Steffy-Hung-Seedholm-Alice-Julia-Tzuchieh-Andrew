@@ -1,7 +1,10 @@
 package edu.northeastern.cs5200.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.sql.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -17,7 +20,8 @@ public class Book {
 
     private String title;
     private Date yearPublished;
-    private Genre genre;
+
+    private String genre;
 
     @OneToMany(mappedBy = "book", fetch = FetchType.EAGER)
     private Set<BookCopy> bookCopies;
@@ -26,11 +30,11 @@ public class Book {
     private String ISBN;
 
     public Book(){
-
+        this.bookCopies = new HashSet<BookCopy>();
     }
 
     public Book(Integer id, String title, Author author, Date yearPublished,
-                Genre genre, String ISBN, Set<BookCopy> bookCopies) {
+                String genre, String ISBN, Set<BookCopy> bookCopies) {
         this.id = id;
         this.title = title;
         this.author = author;
@@ -64,12 +68,13 @@ public class Book {
         this.yearPublished = yearPublished;
     }
 
-    public Genre getGenre() {
+    public String getGenre() {
         return genre;
     }
 
     public void setGenre(Genre genre) {
-        this.genre = genre;
+        System.out.println("Genre: " + genre);
+        this.genre = genre.toString();
     }
 
     public String getISBN() {
@@ -95,6 +100,26 @@ public class Book {
     public void setBookCopies(Set<BookCopy> bookCopies) {
         this.bookCopies = bookCopies;
     }
+
+
+    public void addCopy(){
+        BookCopy newCopy = new BookCopy();
+        newCopy.setBook(this);
+        newCopy.setAvailable(true);
+        newCopy.setEdition(null);
+        newCopy.setCondition(CurrentCondition.NEW);
+        this.bookCopies.add(newCopy);
+    }
+
+    public void addCopy(Integer edition){
+        BookCopy newCopy = new BookCopy();
+        newCopy.setBook(this);
+        newCopy.setAvailable(true);
+        newCopy.setEdition(edition);
+        newCopy.setCondition(CurrentCondition.NEW);
+        this.bookCopies.add(newCopy);
+    }
+
 
     @Override
     public String toString() {

@@ -1,5 +1,7 @@
 package edu.northeastern.cs5200.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 
 @Entity
@@ -10,24 +12,25 @@ public class BookCopy {
     private Integer id;
 
     @ManyToOne
+    @JsonIgnore
     private Book book;
 
     private Boolean isAvailable;
     private Integer edition;
 
     @Enumerated(EnumType.STRING)
-    private CurrentCondition cond;
+    private CurrentCondition currentCondition;
 
 
     public BookCopy() {
     }
 
-    public BookCopy(Integer id, Book book, Boolean isAvailable, Integer edition, CurrentCondition condition){
+    public BookCopy(Integer id, Book book, Boolean isAvailable, Integer edition, CurrentCondition currentCondition){
         this.id = id;
         this.book = book;
         this.isAvailable = isAvailable;
         this.edition = edition;
-        this.cond = condition;
+        this.currentCondition = currentCondition;
     }
 
     public Integer getId() {
@@ -47,11 +50,11 @@ public class BookCopy {
     }
 
     public CurrentCondition getCondition() {
-        return cond;
+        return currentCondition;
     }
 
     public void setCondition(CurrentCondition condition) {
-        this.cond = condition;
+        this.currentCondition = condition;
     }
 
     public Boolean getAvailable() {

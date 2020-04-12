@@ -20,7 +20,7 @@ public class AudioBook extends Book {
     }
 
     public AudioBook(Integer book_id, String title, Author author, Date yearPublished,
-                     Genre genre, String ISBN, String narratedBy, Integer numMinutes, Double fileSizeMb,
+                     String genre, String ISBN, String narratedBy, Integer numMinutes, Double fileSizeMb,
                      String fileType,  Set<BookCopy> bookCopies){
         super(book_id, title, author, yearPublished, genre, ISBN, bookCopies);
             this.narratedBy = narratedBy;

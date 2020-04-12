@@ -14,7 +14,7 @@ public class HardCopyBook extends Book {
     }
 
     public HardCopyBook(Integer book_id, String title, Author author, Date yearPublished,
-                        Genre genre, String ISBN, Integer numPages, Set<BookCopy> bookCopies) {
+                        String genre, String ISBN, Integer numPages, Set<BookCopy> bookCopies) {
         super(book_id, title, author, yearPublished, genre, ISBN, bookCopies);
         this.numPages = numPages;
 
