@@ -4,6 +4,7 @@ import javax.persistence.*;
 import java.sql.Date;
 
 @Entity(name="books")
+@Inheritance(strategy=InheritanceType.SINGLE_TABLE)
 public class Book {
 
     @Id

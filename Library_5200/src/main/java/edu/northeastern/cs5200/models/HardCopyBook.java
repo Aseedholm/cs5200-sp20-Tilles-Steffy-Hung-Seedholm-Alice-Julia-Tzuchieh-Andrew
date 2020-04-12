@@ -1,7 +1,9 @@
 package edu.northeastern.cs5200.models;
 
+import javax.persistence.Entity;
 import java.sql.Date;
 
+@Entity(name="hard_copy_books")
 public class HardCopyBook extends Book {
 
     private Integer numPages;
@@ -16,5 +18,14 @@ public class HardCopyBook extends Book {
         this.numPages = numPages;
 
     }
+
+    public Integer getNumPages() {
+        return numPages;
+    }
+
+    public void setNumPages(Integer numPages) {
+        this.numPages = numPages;
+    }
+
 
 }
