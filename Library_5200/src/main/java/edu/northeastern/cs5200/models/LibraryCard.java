@@ -6,6 +6,9 @@ import java.sql.Date;
 @Entity
 public class LibraryCard {
 
+    // TODO we could add something like "suspended" if they return stuff late a lot
+    // Or make a trigger that activates that once 3x books are returned late
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
