@@ -1,10 +1,8 @@
 package edu.northeastern.cs5200.models;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 import java.sql.Date;
+import java.util.Set;
 
 @Entity
 public class Member extends User {
@@ -16,8 +14,11 @@ public class Member extends User {
     @JoinColumn(name = "member_id", referencedColumnName = "id")
     private LibraryCard libraryCard;
 
+    @ManyToOne
+    private Member sponsoredBy;
 
-    //TODO sponsoredBy
+    @OneToMany(mappedBy="sponsoredBy")
+    private Set<Member> recipientsOfSponsorship;
 
 
 
@@ -26,10 +27,13 @@ public class Member extends User {
     }
 
     public Member(Integer id, String firstName, String lastName, String username, String password, String email,
-                  Date dateOfBirth, Boolean isUnderThirteen, Boolean isSponsored) {
+                  Date dateOfBirth, Boolean isUnderThirteen, Boolean isSponsored, Member sponsoredBy,
+                  Set<Member> recipientsOfSponsorship) {
         super(id, firstName, lastName, username, password, email, dateOfBirth);
         this.isUnderThirteen = isUnderThirteen;
         this.isSponsored = isSponsored;
+        this.sponsoredBy = sponsoredBy;
+        this.recipientsOfSponsorship = recipientsOfSponsorship;
     }
 
 
@@ -56,5 +60,21 @@ public class Member extends User {
 
     public void setLibraryCard(LibraryCard libraryCard) {
         this.libraryCard = libraryCard;
+    }
+
+    public Member getSponsoredBy() {
+        return sponsoredBy;
+    }
+
+    public void setSponsoredBy(Member sponsoredBy) {
+        this.sponsoredBy = sponsoredBy;
+    }
+
+    public Set<Member> getRecipientsOfSponsorship() {
+        return recipientsOfSponsorship;
+    }
+
+    public void setRecipientsOfSponsorship(Set<Member> recipientsOfSponsorship) {
+        this.recipientsOfSponsorship = recipientsOfSponsorship;
     }
 }

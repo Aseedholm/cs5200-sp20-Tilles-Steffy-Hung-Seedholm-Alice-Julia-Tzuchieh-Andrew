@@ -21,10 +21,6 @@ public class Author {
     @OneToMany(mappedBy = "author", fetch = FetchType.EAGER)
     private Set<Book> booksWritten;
 
-//    org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'entityManagerFactory'
-//    defined in class path resource [org/springframework/boot/autoconfigure/orm/jpa/HibernateJpaConfiguration.class]: Invocation of init method failed; nested exception is o
-//    rg.hibernate.AnnotationException: mappedBy reference an unknown target entity property: edu.northeastern.cs5200.models.Book.books in edu.northeastern.cs5200.models.Author.booksWritten
-
     public Author() {
 
     }
