@@ -1,5 +1,6 @@
 package edu.northeastern.cs5200.controllers;
 
+import edu.northeastern.cs5200.daos.LibraryDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,11 +13,12 @@ import edu.northeastern.cs5200.repositories.MemberRepository;
 @RestController
 @CrossOrigin(origins = "*")
 public class MemberController {
+
   @Autowired
-  MemberRepository memberRepository;
+  LibraryDao libraryDao;
 
   @PostMapping("api/members")
   public Member createMember(@RequestBody Member member) {
-    return memberRepository.save(member);
+    return libraryDao.createMember(member);
   }
 }
