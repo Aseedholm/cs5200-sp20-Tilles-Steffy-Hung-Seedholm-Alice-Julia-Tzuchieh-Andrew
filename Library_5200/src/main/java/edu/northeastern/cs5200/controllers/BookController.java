@@ -21,11 +21,15 @@ public class BookController {
     LibraryDao libraryDao;
 
 
-    @GetMapping("/books")
+    @PostMapping("api/book")
+    public Book createBook(@RequestBody Book book) {
+        return libraryDao.createBook(book);
+    }
+
+    @GetMapping("api/books")
     public List<Book> findAllBooks() {
         return (List<Book>) libraryDao.findAllBooks();
     }
-
 
 
 

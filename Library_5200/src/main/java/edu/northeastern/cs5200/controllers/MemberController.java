@@ -1,14 +1,14 @@
 package edu.northeastern.cs5200.controllers;
 
 import edu.northeastern.cs5200.daos.LibraryDao;
+import edu.northeastern.cs5200.models.Author;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import edu.northeastern.cs5200.models.Member;
 import edu.northeastern.cs5200.repositories.MemberRepository;
+
+import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -17,8 +17,15 @@ public class MemberController {
   @Autowired
   LibraryDao libraryDao;
 
-  @PostMapping("api/members")
+  @PostMapping("api/member")
   public Member createMember(@RequestBody Member member) {
     return libraryDao.createMember(member);
   }
+
+  @GetMapping("/api/members")
+  public List<Member> findAllMembers() {
+    return (List<Member>) libraryDao.findAllMembers();
+  }
+
+
 }

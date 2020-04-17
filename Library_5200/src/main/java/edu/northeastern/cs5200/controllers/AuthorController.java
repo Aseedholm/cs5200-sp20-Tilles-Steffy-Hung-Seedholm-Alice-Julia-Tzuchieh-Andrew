@@ -1,9 +1,8 @@
 package edu.northeastern.cs5200.controllers;
 
+import edu.northeastern.cs5200.daos.LibraryDao;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -16,12 +15,18 @@ import edu.northeastern.cs5200.repositories.*;
 public class AuthorController {
 
   @Autowired
-  AuthorRepository authorRepository;
+  LibraryDao libraryDao;
+
+  @PostMapping("api/author")
+  public Author createAuthor(@RequestBody Author author) {
+    return libraryDao.createAuthor(author);
+  }
 
   @GetMapping("/api/authors")
   public List<Author> findAllAuthors() {
-    return (List<Author>) authorRepository.findAll();
+    return (List<Author>) libraryDao.findAllAuthors();
   }
+
 
 
 
