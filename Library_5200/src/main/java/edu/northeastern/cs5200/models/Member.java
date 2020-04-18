@@ -76,4 +76,16 @@ public class Member extends User {
     public void setRecipientsOfSponsorship(Set<Member> recipientsOfSponsorship) {
         this.recipientsOfSponsorship = recipientsOfSponsorship;
     }
+
+    @Override
+    public String toString() {
+        return "Member{" +
+                "username=" + getUsername() +
+                "isUnderThirteen=" + isUnderThirteen +
+                ", isSponsored=" + isSponsored +
+                ", libraryCard=" + libraryCard +
+                ", sponsoredBy=" + sponsoredBy +
+                ", recipientsOfSponsorship=" + recipientsOfSponsorship +
+                '}';
+    }
 }

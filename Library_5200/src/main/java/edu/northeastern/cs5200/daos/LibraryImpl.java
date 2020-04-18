@@ -3,11 +3,14 @@ package edu.northeastern.cs5200.daos;
 import edu.northeastern.cs5200.models.*;
 import edu.northeastern.cs5200.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Date;
+import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Repository
@@ -115,6 +118,29 @@ public class LibraryImpl implements LibraryDao {
     @Override
     public List<User> findAllUsers() {
         return (List<User>)userRepository.findAll();
+    }
+
+    @Override
+    public Member findMemberById(int id) {
+        Optional member = memberRepository.findById(id);
+        if (member == null) {
+            return null;
+        }
+        return (Member)member.get();
+    }
+
+    @Override
+    public Member findMemberByUsername(String username) {
+
+        Iterable<Member> members = memberRepository.findAll();
+
+        for (Member m : members) {
+            if (m.getUsername().equals(username)) {
+                return m;
+            }
+        }
+
+        return null;
     }
 
     @Override
