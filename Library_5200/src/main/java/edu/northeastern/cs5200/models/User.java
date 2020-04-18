@@ -14,9 +14,14 @@ public class User {
 	private Integer id;
 	private String firstName;
 	private String lastName;
+
+	@Column(unique=true)
 	private String username;
 	private String password;
+
+	@Column(unique=true)
 	private String email;
+
 	private Date dateOfBirth;
 
 	public User() {

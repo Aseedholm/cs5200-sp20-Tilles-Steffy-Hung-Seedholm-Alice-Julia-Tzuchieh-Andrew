@@ -77,6 +77,12 @@ public class Member extends User {
         Calendar minDOB = today;
         minDOB.add(Calendar.YEAR, -13);
 
+        // Just making null DOB be an adult, for convenience.
+        // TODO maybe adjust
+        if (this.getDateOfBirth() == null) {
+            return false;
+        }
+
 
         // If it is  less than zero, than this date is before the minimum DOB
         if (this.getDateOfBirth().compareTo((minDOB.getTime())) < 0) {
