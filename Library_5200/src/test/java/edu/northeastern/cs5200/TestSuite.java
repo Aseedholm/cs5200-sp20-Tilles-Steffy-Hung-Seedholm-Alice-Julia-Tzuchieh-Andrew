@@ -78,23 +78,27 @@ public class TestSuite {
 	@Order(2)
 	public void testIsUnderThirteen() {
 
+		libraryDao.truncateDatabase();
 
-		Member youngerKid = new Member();
-		youngerKid.setDateOfBirth(new java.sql.Date(119, 6, 18));
-		System.out.println("young person dob " + youngerKid.getDateOfBirth());
-		assertTrue(youngerKid.isUnderThirteen());
-		youngerKid.setFirstName("Younger Kid");
 
 
 		Member olderKid = new Member();
 		olderKid.setDateOfBirth(new java.sql.Date(100, 6, 18));
-		assertFalse(olderKid.isUnderThirteen());
 		olderKid.setFirstName("Older Kid");
-		System.out.println("Older person dob " + olderKid.getDateOfBirth());
-
-
-		libraryDao.createMember(youngerKid);
+		olderKid.setUsername("OldKid1000");
 		libraryDao.createMember(olderKid);
+		assertFalse(olderKid.isUnderThirteen());
+
+
+		Member youngerKid = new Member();
+		youngerKid.setDateOfBirth(new java.sql.Date(119, 6, 18));
+		youngerKid.setFirstName("Younger Kid");
+		youngerKid.setUsername("little_guy");
+		youngerKid.setSponsoredBy(libraryDao.findMemberByUsername("OldKid1000").getId());
+		libraryDao.createMember(youngerKid);
+
+		assertTrue(youngerKid.isUnderThirteen());
+		assertFalse(olderKid.isUnderThirteen());
 
 		// TODO make it work/test with almost exactly  13 years old
 

@@ -1,5 +1,7 @@
 package edu.northeastern.cs5200.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.sql.Date;
 import java.util.Calendar;
@@ -9,15 +11,15 @@ import java.util.Set;
 @Entity
 public class Member extends User {
 
-    private Boolean isSponsored;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private LibraryCard libraryCard;
 
-    @ManyToOne
-    private Member sponsoredBy;
+    @Column(name="sponsored_by", insertable=false, updatable=false)
+    private Integer sponsoredBy;
 
-    @OneToMany(mappedBy="sponsoredBy")
+    @OneToMany(fetch=FetchType.EAGER, cascade=CascadeType.PERSIST)
+    @JoinColumn(name="sponsored_by")
     private Set<Member> recipientsOfSponsorship;
 
     public Member() {
@@ -25,22 +27,13 @@ public class Member extends User {
     }
 
     public Member(Integer id, String firstName, String lastName, String username, String password, String email,
-                  Date dateOfBirth, Boolean isSponsored, Member sponsoredBy,
-                  Set<Member> recipientsOfSponsorship) {
+                  Date dateOfBirth, Integer sponsoredBy, Set<Member> recipientsOfSponsorship) {
         super(id, firstName, lastName, username, password, email, dateOfBirth);
-        this.isSponsored = isSponsored;
         this.sponsoredBy = sponsoredBy;
         this.recipientsOfSponsorship = recipientsOfSponsorship;
     }
 
 
-    public Boolean getSponsored() {
-        return isSponsored;
-    }
-
-    public void setSponsored(Boolean sponsored) {
-        isSponsored = sponsored;
-    }
 
     public LibraryCard getLibraryCard() {
         return libraryCard;
@@ -50,11 +43,15 @@ public class Member extends User {
         this.libraryCard = libraryCard;
     }
 
-    public Member getSponsoredBy() {
+    public Integer getSponsoredBy() {
         return sponsoredBy;
     }
 
-    public void setSponsoredBy(Member sponsoredBy) {
+    public void setSponsor(Member sponsor) {
+        this.sponsoredBy = sponsor.getId();
+    }
+
+    public void setSponsoredBy(Integer sponsoredBy) {
         this.sponsoredBy = sponsoredBy;
     }
 
@@ -64,6 +61,10 @@ public class Member extends User {
 
     public void setRecipientsOfSponsorship(Set<Member> recipientsOfSponsorship) {
         this.recipientsOfSponsorship = recipientsOfSponsorship;
+    }
+
+    public void addSponsorRecipient(Member recipient) {
+        this.recipientsOfSponsorship.add(recipient);
     }
 
     /**
@@ -93,8 +94,8 @@ public class Member extends User {
     @Override
     public String toString() {
         return "Member{" +
-                "username=" + getUsername() +
-                ", isSponsored=" + isSponsored +
+                "id=" + getId() +
+                ", username=" + getUsername() +
                 ", libraryCard=" + libraryCard +
                 ", sponsoredBy=" + sponsoredBy +
                 ", recipientsOfSponsorship=" + recipientsOfSponsorship +
@@ -102,9 +103,6 @@ public class Member extends User {
     }
 
 
-    public void addSponsorRecipient(Member recipeint) {
-        this.recipientsOfSponsorship.add(recipeint);
-    }
 
 
 }

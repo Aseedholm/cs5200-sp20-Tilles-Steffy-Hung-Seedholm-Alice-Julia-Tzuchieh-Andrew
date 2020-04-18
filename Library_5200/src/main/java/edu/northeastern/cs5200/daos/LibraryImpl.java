@@ -135,6 +135,9 @@ public class LibraryImpl implements LibraryDao {
         Iterable<Member> members = memberRepository.findAll();
 
         for (Member m : members) {
+            if (m.getUsername() == null) {
+                continue;
+            }
             if (m.getUsername().equals(username)) {
                 return m;
             }
@@ -222,37 +225,48 @@ public class LibraryImpl implements LibraryDao {
 
         // Validate sponsorship - if age is < 13, must have valid sponsor
         if (member.isUnderThirteen() ) {
+            System.out.println("Attempting to create a member under thirteen.");
 
-            // Check that the id is valid. If it is, set up the sponsorship and save the recipient and the sponsor
+            // When creating a new member <13 years old, they must have a sponsor.
             if (member.getSponsoredBy() == null) {
-                System.out.println("Invalid sponsorship member ID.");
+                System.out.println("You must enter a sponsor ID.");
                 return null;
             }
 
+            // Find the sponsor in the database
+            Member sponsor = memberRepository.findById(member.getSponsoredBy()).get();
 
-            int sponsoredById = member.getSponsoredBy().getId();
-            Member sponsor = memberRepository.findById(sponsoredById).get();
-
+            // Make sure the sponsor exists in the DB
             if (sponsor != null) {
 
+                // Make sure the sponsor is over 13
+                if (!sponsor.isUnderThirteen()) {
+                    member.setSponsoredBy(sponsor.getId());
 
-                sponsor.addSponsorRecipient(member);
-                memberRepository.save(sponsor);
-
-                member.setSponsoredBy(sponsor);
-                memberRepository.save(member);
+                    // If so, save new member who is under 13 to db
+                    memberRepository.save(member);
+                    return member;
+                }
+                else {
+                    System.out.println("Sponsor is not old enough to sponsor another library member.");
+                    // TO DO throw exception?
+                    return null;
+                }
             }
 
             else {
-                // Throw error? idk
                 System.out.println("Sponsor not found.");
-                // TODO
+                // TO DO throw exception?
+                return null;
             }
 
         }
 
-        memberRepository.save(member);
-        return member;
+        else {
+            memberRepository.save(member);
+            return member;
+        }
+
     }
 
     @Override
