@@ -21,16 +21,16 @@ public interface LibraryDao {
     List<Member> findAllMembers();
     List<User> findAllUsers();
 
-    void createAdmin(Admin admin);
-    void createAudioBook(AudioBook audioBook);
-    void createAuthor(Author author);
-    void createBook(Book book);
-    void createHardCopyBook(HardCopyBook book);
-    void createLegerEntry(LegerEntry entry);
-    void createLibrarian(Librarian librarian);
-    void createLibraryCard(LibraryCard card);
-    void createMember(Member member);
-    void createUser(User user);
+    Admin createAdmin(Admin admin);
+    AudioBook createAudioBook(AudioBook audioBook);
+    Author createAuthor(Author author);
+    Book createBook(Book book);
+    HardCopyBook createHardCopyBook(HardCopyBook book);
+    LegerEntry createLegerEntry(LegerEntry entry);
+    Librarian createLibrarian(Librarian librarian);
+    LibraryCard createLibraryCard(LibraryCard card);
+    Member createMember(Member member);
+    User createUser(User user);
 
     boolean hasValidLibraryCard(Member member);
     boolean checkOutBook(Member member, Book book);

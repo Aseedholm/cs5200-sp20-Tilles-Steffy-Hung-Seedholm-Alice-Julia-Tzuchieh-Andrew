@@ -118,55 +118,65 @@ public class LibraryImpl implements LibraryDao {
     }
 
     @Override
-    public void createAdmin(Admin admin) {
+    public Admin createAdmin(Admin admin) {
         adminRepository.save(admin);
+        return admin;
     }
 
     @Override
-    public void createAudioBook(AudioBook audioBook) {
+    public AudioBook createAudioBook(AudioBook audioBook) {
         audioBookRepository.save(audioBook);
+        return audioBook;
     }
 
     @Override
-    public void createAuthor(Author author) {
+    public Author createAuthor(Author author) {
         authorRepository.save(author);
+        return author;
     }
 
     @Override
-    public void createBook(Book book) {
+    public Book createBook(Book book) {
         bookRepository.save(book);
         bookCopyRepository.saveAll(book.getBookCopies());
+        return book;
 
     }
 
     @Override
-    public void createHardCopyBook(HardCopyBook book) {
+    public HardCopyBook createHardCopyBook(HardCopyBook book) {
         hardCopyBookRepository.save(book);
+        return book;
     }
 
     @Override
-    public void createLegerEntry(LegerEntry entry) {
+    public LegerEntry createLegerEntry(LegerEntry entry) {
         legerEntryRepository.save(entry);
+        return entry;
     }
 
     @Override
-    public void createLibrarian(Librarian librarian) {
+    public Librarian createLibrarian(Librarian librarian) {
         librarianRepository.save(librarian);
+        return librarian;
     }
 
     @Override
-    public void createLibraryCard(LibraryCard card) {
+    public LibraryCard createLibraryCard(LibraryCard card) {
         libraryCardRepository.save(card);
+        return card;
     }
 
     @Override
-    public void createMember(Member member) {
+    public Member createMember(Member member) {
         memberRepository.save(member);
+        return member;
     }
 
     @Override
-    public void createUser(User user) {
+    public User createUser(User user) {
         userRepository.save(user);
+        return user;
     }
 
 
@@ -197,6 +207,7 @@ public class LibraryImpl implements LibraryDao {
         // Check that there exist at least one copy of the book
 
         BookCopy bookToBorrow = findAvailableCopy(book);
+
         if(bookToBorrow == null) {
             return false;
         }
@@ -206,6 +217,11 @@ public class LibraryImpl implements LibraryDao {
         java.sql.Date currentDate = new java.sql.Date(calendar.getTime().getTime());
         LegerEntry newEntry = new LegerEntry(member.getId(), book.getId(), currentDate, null);
         legerEntryRepository.save(newEntry);
+
+        // Mark as not available
+        bookToBorrow.setAvailable(false);
+        bookCopyRepository.save(bookToBorrow);
+
         return true;
 
     }
@@ -221,7 +237,8 @@ public class LibraryImpl implements LibraryDao {
         for (BookCopy c : copies) {
 
             // If this is a copy of the correct book and it is available, return it
-            if (c.getBook().getId() == book.getId() && isBookCopyAvailable(c)) {
+            if (c.getBook().getId() == book.getId() && c.getAvailable()) {
+
 
                 return c;
 
@@ -233,22 +250,6 @@ public class LibraryImpl implements LibraryDao {
     }
 
 
-    public boolean isBookCopyAvailable(BookCopy bookCopy) {
-
-        //TODO should we keep this stored as a variable or do a lookup each time?
-        // As a variable, there is risk of inconsistancy
-        // As a lookup, it takes longer
-
-        Set<LegerEntry> allLegerEntries = (Set<LegerEntry>)legerEntryRepository.findAll();
-        for (LegerEntry entry : allLegerEntries) {
-            if (entry.getId().getBookCopyId() == bookCopy.getId()) {
-                return false;
-            }
-        }
-
-        return true;
-
-    }
 
 
 }
