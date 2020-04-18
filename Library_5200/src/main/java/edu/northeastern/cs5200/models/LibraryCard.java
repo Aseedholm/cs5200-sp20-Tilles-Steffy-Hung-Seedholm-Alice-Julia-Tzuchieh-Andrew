@@ -21,6 +21,7 @@ public class LibraryCard {
     private Date expirationDate;
 
     public LibraryCard(Integer id, Member member, Date expirationDate) {
+
         this.id = id;
         this.user = member;
         this.expirationDate = expirationDate;
