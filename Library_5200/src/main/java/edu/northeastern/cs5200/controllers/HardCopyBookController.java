@@ -1,6 +1,7 @@
 package edu.northeastern.cs5200.controllers;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +29,11 @@ public class HardCopyBookController {
 	@GetMapping("/api/hard-copy-book")
 	public List<HardCopyBook> findAllHardCopyBooks() {
 		return libraryDao.findAllHardCopyBooks();
+	}
+
+	@GetMapping("/api/hard-copy-book/{bookId}")
+	public Set<HardCopyBook> getHardCopyBookBybookId(@PathVariable Integer bookId) {
+		return libraryDao.findHardCopyBooksByBookId(bookId);
 	}
 
 

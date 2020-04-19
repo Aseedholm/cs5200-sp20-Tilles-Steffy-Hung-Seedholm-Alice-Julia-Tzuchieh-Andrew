@@ -34,13 +34,19 @@ public interface LibraryDao {
     Librarian findLibrarianById(int id);
     LibraryCard findLibraryCardByMemberId(int memberId);
 
+
     // Finder methods -> find by some other attribute
+    // >> Find single object
     Member findMemberByUsername(String username);
     Librarian findLibrarianByUsername(String username);
     LibraryCard findLibraryCardByMemberUsername(String memberUsername);
     Book findBookByTitle(String title);
 
-    // Create a single object  methods
+    // >> Find a set of objects
+    Set<HardCopyBook> findHardCopyBooksByBookId(int id);
+    Set<AudioBook> findAudioBooksByBookId(int id);
+
+    // Create a single object methods
     Admin createAdmin(Admin admin);
     AudioBook createAudioBook(AudioBook audioBook);
     Author createAuthor(Author author);

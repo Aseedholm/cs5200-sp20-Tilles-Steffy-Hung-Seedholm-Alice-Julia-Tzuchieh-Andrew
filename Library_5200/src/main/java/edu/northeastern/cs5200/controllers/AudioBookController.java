@@ -1,6 +1,7 @@
 package edu.northeastern.cs5200.controllers;
 
 import java.util.List;
+import java.util.Set;
 
 import edu.northeastern.cs5200.models.HardCopyBook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,4 +31,10 @@ public class AudioBookController {
 	public List<AudioBook> findAllAudioBooks() {
 		return libraryDao.findAllAudioBooks();
 	}
+
+	@GetMapping("/api/audio-books/{bookId}")
+	public Set<AudioBook> findAudioBookByBookId(@PathVariable Integer bookId) {
+		return libraryDao.findAudioBooksByBookId(bookId);
+	}
+
 }

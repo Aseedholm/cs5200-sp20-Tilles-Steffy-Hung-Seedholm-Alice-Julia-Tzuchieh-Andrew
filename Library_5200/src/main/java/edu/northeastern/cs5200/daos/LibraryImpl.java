@@ -148,17 +148,37 @@ public class LibraryImpl implements LibraryDao {
 
     @Override
     public LibraryCard findLibraryCardByMemberId(int memberId) {
-    	Optional<Member> member = memberRepository.findById(memberId);
-        Optional<LibraryCard> card = libraryCardRepository.findById(member.get().getLibraryCard().getId());
-        if (card == null) {
+
+        // Make sure member exists
+    	var foundMember = memberRepository.findById(memberId);
+    	if (foundMember.isPresent()) {
+    	    Member member = foundMember.get();
+
+    	    // Make sure the library card exists
+            var foundCard = libraryCardRepository.findById(member.getLibraryCard().getId());
+            if (foundCard.isPresent()) {
+                return foundCard.get();
+            }
             return null;
         }
-        return (LibraryCard)card.get();
+
+    	return null;
+
     }
-    
+
+    @Override
+    public Set<HardCopyBook> findHardCopyBooksByBookId(int id) {
+        return hardCopyBookRepository.findByBookId(id);
+    }
+
+    @Override
+    public Set<AudioBook> findAudioBooksByBookId(int id) {
+        return audioBookRepository.findByBookId(id);
+    }
+
     @Override
     public Member findMemberByUsername(String username) {
-
+        //TODO use jpql
         Iterable<Member> members = memberRepository.findAll();
 
         for (Member m : members) {
@@ -175,6 +195,7 @@ public class LibraryImpl implements LibraryDao {
 
     @Override
     public Librarian findLibrarianByUsername(String username) {
+        //TODO use jpql
         Iterable<Librarian> librarians = librarianRepository.findAll();
 
         for (Librarian l : librarians) {
@@ -191,7 +212,7 @@ public class LibraryImpl implements LibraryDao {
     
     @Override
     public LibraryCard findLibraryCardByMemberUsername(String memberUsername) {
-
+        //TODO use jpql
     	Iterable<Member> members = memberRepository.findAll();
 
         for (Member m : members) {
@@ -205,7 +226,6 @@ public class LibraryImpl implements LibraryDao {
 
     @Override
     public Book findBookByTitle(String title) {
-        System.out.println("findBookByTitle method in LibraryImpl class.");
         return bookRepository.findBookByTitle(title);
     }
 
@@ -273,10 +293,12 @@ public class LibraryImpl implements LibraryDao {
             }
 
             // Find the sponsor in the database
-            Member sponsor = memberRepository.findById(member.getSponsoredBy()).get();
+            var sponsorFound = memberRepository.findById(member.getSponsoredBy());
 
             // Make sure the sponsor exists in the DB
-            if (sponsor != null) {
+            if (sponsorFound.isPresent()) {
+
+                Member sponsor = sponsorFound.get();
 
                 // Make sure the sponsor is over 13
                 if (!sponsor.isUnderThirteen()) {
@@ -332,7 +354,6 @@ public class LibraryImpl implements LibraryDao {
             hardCopyBook.setAvailable(true);
             hardCopyBook.setBook(foundBookInDb.get());
             hardCopyBookRepository.save(hardCopyBook);
-            System.out.println("hard copy book: " + hardCopyBook); //TODO remove print statements
             return hardCopyBook;
         }
 
@@ -377,8 +398,11 @@ public class LibraryImpl implements LibraryDao {
 
     @Override
     public boolean deleteMember(Integer id) {
-        if (memberRepository.findById(id).isPresent()) {
-            memberRepository.delete(memberRepository.findById(id).get());
+
+        var foundMember = memberRepository.findById(id);
+
+        if (foundMember.isPresent()) {
+            memberRepository.delete(foundMember.get());
             return true;
         }
         return false;
