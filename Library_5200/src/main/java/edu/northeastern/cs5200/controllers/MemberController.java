@@ -1,6 +1,7 @@
 package edu.northeastern.cs5200.controllers;
 
 import edu.northeastern.cs5200.daos.LibraryDao;
+import edu.northeastern.cs5200.models.LegerEntry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,6 +40,17 @@ public class MemberController {
   public boolean deleteMember(@PathVariable Integer id) {
     return libraryDao.deleteMember(id);
   }
+
+  @PostMapping("/api/members/{memberId}/check-out/{bookId}/hard-copy")
+  public LegerEntry checkOutBookHardCopy(@PathVariable Integer memberId, @PathVariable Integer bookId) {
+    return libraryDao.checkOutBookHardCopy(memberId, bookId);
+  }
+
+  @PostMapping("/api/members/{memberId}/check-out/{bookId}/audiobook-copy")
+  public boolean checkOutBookAudio(@PathVariable Integer memberId, @PathVariable Integer bookId) {
+    return libraryDao.checkOutAudiobook(memberId, bookId);
+  }
+
 
 
 }

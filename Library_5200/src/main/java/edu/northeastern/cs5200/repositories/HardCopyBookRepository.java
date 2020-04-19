@@ -11,10 +11,8 @@ import java.util.Set;
 @Repository
 public interface HardCopyBookRepository extends CrudRepository<HardCopyBook, Integer> {
 
-
     @Query("SELECT hardCopyBook FROM BookCopy hardCopyBook, Book book " +
             "WHERE hardCopyBook.book = book AND hardCopyBook.class = 'hard_copy' AND hardCopyBook.isAvailable=true")
     Set<HardCopyBook> findAvailableBooksById(Integer id);
 
-    //("SELECT b FROM Author a JOIN a.publications b WHERE a.firstName = 'Thorben' AND TYPE(b) = Book");
 }

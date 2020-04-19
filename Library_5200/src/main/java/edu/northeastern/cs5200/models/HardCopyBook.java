@@ -41,4 +41,14 @@ public class HardCopyBook extends BookCopy {
     public void setCurrentCondition(CurrentCondition currentCondition) {
         this.currentCondition = currentCondition;
     }
+
+
+    @Override
+    public String toString() {
+        return "HardCopyBook{" +
+                "book=" + getBook() +
+                ", numPages=" + numPages +
+                ", currentCondition=" + currentCondition +
+                '}';
+    }
 }

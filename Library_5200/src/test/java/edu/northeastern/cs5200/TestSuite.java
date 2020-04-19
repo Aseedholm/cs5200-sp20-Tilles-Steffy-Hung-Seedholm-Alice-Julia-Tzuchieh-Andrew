@@ -145,9 +145,12 @@ public class TestSuite {
 
 
 		Member steve = libraryDao.findMemberByUsername("johnsmith");
-		Book desiredBook = libraryDao.findBookByTitle("Sapiens");
-		libraryDao.checkOutBookHardCopy(steve, desiredBook);
-		assertEquals(1,libraryDao.findAllLegerEntries().size());
+		Book desiredBook = libraryDao.findBookByTitle("The Signal and the Noise");
+		//libraryDao.checkOutBookHardCopy(steve, desiredBook);
+		libraryDao.checkOutAudiobook(steve.getId(), desiredBook.getId());
+		assertEquals(2,libraryDao.findAllLegerEntries().size());
+
+
 
 	}
 

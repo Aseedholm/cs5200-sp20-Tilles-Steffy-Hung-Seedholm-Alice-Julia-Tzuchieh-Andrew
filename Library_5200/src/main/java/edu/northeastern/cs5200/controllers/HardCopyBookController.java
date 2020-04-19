@@ -3,11 +3,7 @@ package edu.northeastern.cs5200.controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import edu.northeastern.cs5200.daos.LibraryDao;
 import edu.northeastern.cs5200.models.HardCopyBook;
@@ -24,8 +20,19 @@ public class HardCopyBookController {
 		return libraryDao.createHardCopyBook(book);
 	}
 
+	@PostMapping("api/hard-copy-books/{id}")
+	public HardCopyBook createHardCopyBookById(@PathVariable Integer id) {
+		return libraryDao.addHardCopy(id);
+	}
+
+
+
 	@GetMapping("/api/hard-copy-book")
 	public List<HardCopyBook> findAllHardCopyBooks() {
 		return libraryDao.findAllHardCopyBooks();
 	}
+
+
+
+
 }

@@ -52,6 +52,10 @@ public interface LibraryDao {
     Member createMember(Member member);
     User createUser(User user);
 
+    // Specialized single-create methods
+    HardCopyBook addHardCopy(Integer bookId);
+    AudioBook addAudiobook(Integer bookId);
+
 
     // Delete by ID methods
     boolean deleteAdmin(Integer id);
@@ -59,12 +63,14 @@ public interface LibraryDao {
     boolean deleteMember(Integer id);
 
 
-
-
     // More advanced methods
     boolean hasValidLibraryCard(Member member);
-    boolean checkOutBookHardCopy(Member member, Book book);
-    Set<HardCopyBook> findAvailableHardCopy(Book book);
+
+    // To check out books
+    LegerEntry checkOutBookHardCopy(Integer memberId, Integer bookId);
+    boolean checkOutAudiobook(Integer memberId, Integer bookId);
+    Set<HardCopyBook> findAvailableHardCopies(Book book);
+    Set<AudioBook> findAvailableAudiobooks(Book book);
 
 }
 

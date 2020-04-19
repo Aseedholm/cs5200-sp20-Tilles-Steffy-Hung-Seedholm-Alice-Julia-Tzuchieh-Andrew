@@ -5,10 +5,7 @@ import edu.northeastern.cs5200.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.util.Calendar;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Repository
 public class LibraryImpl implements LibraryDao {
@@ -318,6 +315,41 @@ public class LibraryImpl implements LibraryDao {
     }
 
     @Override
+    public HardCopyBook addHardCopy(Integer bookId) {
+        var foundBookInDb = bookRepository.findById(bookId);
+
+        // Make sure book ID is valid
+        if (foundBookInDb.isPresent()) {
+            HardCopyBook hardCopyBook = new HardCopyBook();
+            hardCopyBook.setCurrentCondition(CurrentCondition.NEW);
+            hardCopyBook.setAvailable(true);
+            hardCopyBook.setBook(foundBookInDb.get());
+            hardCopyBookRepository.save(hardCopyBook);
+            System.out.println("hard copy book: " + hardCopyBook); //TODO remove print statements
+            return hardCopyBook;
+        }
+
+        return null;
+
+    }
+
+    @Override
+    public AudioBook addAudiobook(Integer bookId) {
+        var foundBookInDb = bookRepository.findById(bookId);
+
+        // Make sure book ID is valid
+        if (foundBookInDb.isPresent()) {
+            AudioBook newBookCopy = new AudioBook();
+            newBookCopy.setAvailable(true);
+            newBookCopy.setBook(foundBookInDb.get());
+            audioBookRepository.save(newBookCopy);
+            return newBookCopy;
+        }
+
+        return null;
+    }
+
+    @Override
     public boolean deleteAdmin(Integer id) {
 
         if (adminRepository.findById(id).isPresent()) {
@@ -362,37 +394,99 @@ public class LibraryImpl implements LibraryDao {
 
     }
 
-    @Override
-    public boolean checkOutBookHardCopy(Member member, Book book) {
 
-        System.out.println("Validating library card....");
-        // Check that user's library card is active
-        if (!hasValidLibraryCard(member)) {
-            return false;
+
+    @Override
+    public LegerEntry checkOutBookHardCopy(Integer memberId, Integer bookId) {
+
+        var foundMemberInDb = memberRepository.findById(memberId);
+        var foundBookInDb = bookRepository.findById(bookId);
+
+        // Make sure the member ID and book ID are valid
+        if (foundMemberInDb.isPresent() && foundBookInDb.isPresent()) {
+            Member member = foundMemberInDb.get();
+            Book book = foundBookInDb.get();
+
+            // Check that user's library card is active
+            if (!hasValidLibraryCard(member)) {
+                return null;
+            }
+
+            // Check that we have at least one copy of the book, and it is available
+            Iterator<HardCopyBook> availableBooks = findAvailableHardCopies(book).iterator();
+            if (!availableBooks.hasNext()) {
+                return null;
+            }
+
+            HardCopyBook bookToBorrow = availableBooks.next();
+
+            // Finally, check out the book by creating a leger entry
+            Calendar calendar = Calendar.getInstance();
+            java.sql.Date currentDate = new java.sql.Date(calendar.getTime().getTime());
+            LegerEntry newEntry = new LegerEntry(member.getId(), book.getId(), currentDate, null);
+            legerEntryRepository.save(newEntry);
+
+            // Mark book copy as not available
+            bookToBorrow.setAvailable(false);
+            bookCopyRepository.save(bookToBorrow);
+
+            return newEntry;
         }
 
-        // Check that we have at least one copy of the book, and it is available
-        System.out.println("Finding available copy...");
-        BookCopy bookToBorrow = findAvailableHardCopy(book).iterator().next(); //TODO make this normal
+        return null;
 
-        // Finally, check out the book by creating a leger entry
-        Calendar calendar = Calendar.getInstance();
-        java.sql.Date currentDate = new java.sql.Date(calendar.getTime().getTime());
-        LegerEntry newEntry = new LegerEntry(member.getId(), book.getId(), currentDate, null);
-        legerEntryRepository.save(newEntry);
-
-        // Mark as not available
-        bookToBorrow.setAvailable(false);
-        bookCopyRepository.save(bookToBorrow);
-
-        return true;
 
     }
 
     @Override
-    public Set<HardCopyBook> findAvailableHardCopy(Book book) {
-        System.out.println("Finding available hard copy....");
+    public boolean checkOutAudiobook(Integer memberId, Integer bookId) {
+
+        var foundMemberInDb = memberRepository.findById(memberId);
+        var foundBookInDb = bookRepository.findById(bookId);
+
+        // Make sure the member ID and book ID are valid
+        if (foundMemberInDb.isPresent() && foundBookInDb.isPresent()) {
+            Member member = foundMemberInDb.get();
+            Book book = foundBookInDb.get();
+
+            // Check that user's library card is active
+            if (!hasValidLibraryCard(member)) {
+                return false;
+            }
+
+            // Check that we have at least one copy of the book, and it is available
+            Iterator<AudioBook> availableBooks = findAvailableAudiobooks(book).iterator();
+            if (!availableBooks.hasNext()) {
+                return false;
+            }
+
+            // Take whatever one floats up first that is available
+            AudioBook bookToBorrow = availableBooks.next();
+
+            // Finally, check out the book by creating a leger entry
+            java.sql.Date currentDate = new java.sql.Date(Calendar.getInstance().getTime().getTime());
+            LegerEntry newEntry = new LegerEntry(member.getId(), book.getId(), currentDate, null);
+            legerEntryRepository.save(newEntry);
+
+            // Mark book copy as not available
+            bookToBorrow.setAvailable(false);
+            bookCopyRepository.save(bookToBorrow);
+
+            return true;
+        }
+
+        return false;
+
+    }
+
+    @Override
+    public Set<HardCopyBook> findAvailableHardCopies(Book book) {
         return hardCopyBookRepository.findAvailableBooksById(book.getId());
+    }
+
+    @Override
+    public Set<AudioBook> findAvailableAudiobooks(Book book) {
+        return audioBookRepository.findAvailableBooksById(book.getId());
     }
 
 
