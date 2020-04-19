@@ -5,11 +5,9 @@ import edu.northeastern.cs5200.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Date;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Repository
 public class LibraryImpl implements LibraryDao {
@@ -127,6 +125,11 @@ public class LibraryImpl implements LibraryDao {
     }
 
     @Override
+    public Book findBookById(int id) {
+        return null;
+    }
+
+    @Override
     public Member findMemberById(int id) {
 
         if (!memberRepository.findById(id).isPresent()) {
@@ -200,6 +203,11 @@ public class LibraryImpl implements LibraryDao {
         }
 
         return null;
+    }
+
+    @Override
+    public Book findBookByTitle(String title) {
+        return bookRepository.findBookByTitle(title);
     }
 
     @Override
@@ -338,35 +346,30 @@ public class LibraryImpl implements LibraryDao {
 
     @Override
     public boolean hasValidLibraryCard(Member member) {
-        Calendar calendar = Calendar.getInstance();
-        java.sql.Date currentDate = new java.sql.Date(calendar.getTime().getTime());
 
-        if (memberRepository.findById(member.getId()).isPresent()) {
-            Member foundMember = memberRepository.findById(member.getId()).get();
-            Date expirationDate = foundMember.getLibraryCard().getExpirationDate();
-
-            return (currentDate.compareTo(expirationDate) < 0);
-        }
-
-        return false;
+        return true;
+        //TODO: library cards aren't being created yet. when they do, need to validate.
+//        java.sql.Date currentDate = new java.sql.Date(Calendar.getInstance().getTime().getTime());
+//        AtomicReference<Date> expirationDate = null;
+//        Optional<Member> memberInDb = memberRepository.findById(member.getId());
+//        memberInDb.ifPresent(m -> {
+//            expirationDate.set(m.getLibraryCard().getExpirationDate());
+//        });
+//
+//        return (currentDate.compareTo(expirationDate.get()) < 0);
 
     }
 
     @Override
-    public boolean checkOutBook(Member member, Book book) {
+    public boolean checkOutBookHardCopy(Member member, Book book) {
 
-        // Check that user is not suspended
         // Check that user's library card is active
         if (!hasValidLibraryCard(member)) {
             return false;
         }
-        // Check that there exist at least one copy of the book
 
+        // Check that we have at least one copy of the book, and it is available
         BookCopy bookToBorrow = findAvailableCopy(book);
-
-        if(bookToBorrow == null) {
-            return false;
-        }
 
         // Finally, check out the book by creating a leger entry
         Calendar calendar = Calendar.getInstance();
@@ -384,25 +387,7 @@ public class LibraryImpl implements LibraryDao {
 
     @Override
     public BookCopy findAvailableCopy(Book book) {
-        //TODO way to optimize this? Right now it loads all to memory, then hunts for a matching book id.
-        // Should probably override with SQL
-
-        Set<BookCopy> copies = (Set<BookCopy>)bookCopyRepository.findAll();
-
-        // Iterate through all copies
-        for (BookCopy c : copies) {
-
-            // If this is a copy of the correct book and it is available, return it
-            if (c.getBook().getId() == book.getId() && c.getAvailable()) {
-
-
-                return c;
-
-            }
-        }
-
-        return null;
-
+        return bookCopyRepository.findAvailableBookByTitle(book.getTitle());
     }
 
 

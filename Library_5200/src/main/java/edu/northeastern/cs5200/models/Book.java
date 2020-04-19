@@ -100,7 +100,6 @@ public class Book {
         this.bookCopies = bookCopies;
     }
 
-
     public void addHardCoverCopy(){
         HardCopyBook newCopy = new HardCopyBook();
         newCopy.setBook(this);
@@ -114,7 +113,6 @@ public class Book {
         AudioBook newCopy = new AudioBook();
         newCopy.setBook(this);
         newCopy.setAvailable(true);
-        newCopy.setNarratedBy("An eloquent speaker");
         this.bookCopies.add(newCopy);
     }
 

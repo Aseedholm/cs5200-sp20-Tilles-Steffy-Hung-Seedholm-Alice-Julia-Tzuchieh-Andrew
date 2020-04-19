@@ -106,37 +106,48 @@ public class TestSuite {
 //	}
 
 
+//	@Test
+//	public void populateDB(){
+//
+////		libraryDao.dropBooks();
+////
+////		Book sapiens = new Book();
+////		sapiens.setTitle("Sapiens");
+////		sapiens.setGenre(Genre.HISTORY);
+////		sapiens.setISBN("abc123");
+////
+////		HardCopyBook sapiens1 = new HardCopyBook();
+////		sapiens1.setBook(sapiens);
+////		sapiens1.setAvailable(true);
+////		sapiens1.setNumPages(400);
+////		sapiens1.setCurrentCondition(CurrentCondition.NEW);
+////
+////		libraryDao.createBook(sapiens);
+////		libraryDao.createHardCopyBook(sapiens1);
+////
+////
+////		Book signal = new Book();
+////		signal.setTitle("The Signal and the Noise");
+////		signal.setGenre(Genre.SCIENCE);
+////		signal.setISBN("zaz321");
+////		signal.addAudiobook();
+////		signal.addAudiobook();
+////		signal.addHardCoverCopy();
+////		libraryDao.createBook(signal);
+//
+//
+//
+//	}
+
+
 	@Test
-	public void populateDB(){
-
-		libraryDao.dropBooks();
-
-		Book sapiens = new Book();
-		sapiens.setTitle("Sapiens");
-		sapiens.setGenre(Genre.HISTORY);
-		sapiens.setISBN("abc123");
-
-		HardCopyBook sapiens1 = new HardCopyBook();
-		sapiens1.setBook(sapiens);
-		sapiens1.setAvailable(true);
-		sapiens1.setNumPages(400);
-		sapiens1.setCurrentCondition(CurrentCondition.NEW);
-
-		libraryDao.createBook(sapiens);
-		libraryDao.createHardCopyBook(sapiens1);
+	public void testCheckOutBook() {
 
 
-		Book signal = new Book();
-		signal.setTitle("The Signal and the Noise");
-		signal.setGenre(Genre.SCIENCE);
-		signal.setISBN("zaz321");
-		signal.addAudiobook();
-		signal.addAudiobook();
-		signal.addHardCoverCopy();
-		libraryDao.createBook(signal);
-
-
-
+		Member steve = libraryDao.findMemberByUsername("johnsmith");
+		Book desiredBook = libraryDao.findBookByTitle("Sapiens");
+		libraryDao.checkOutBookHardCopy(steve, desiredBook);
+		assertEquals(1,libraryDao.findAllLegerEntries().size());
 
 	}
 

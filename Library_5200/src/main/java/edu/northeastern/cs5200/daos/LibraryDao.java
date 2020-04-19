@@ -1,9 +1,11 @@
 package edu.northeastern.cs5200.daos;
 
 import edu.northeastern.cs5200.models.*;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Set;
 
 @Component
 public interface LibraryDao {
@@ -27,6 +29,7 @@ public interface LibraryDao {
     List<User> findAllUsers();
 
     // Finder methods -> find by ID
+    Book findBookById(int id);
     Member findMemberById(int id);
     Librarian findLibrarianById(int id);
     LibraryCard findLibraryCardByMemberId(int memberId);
@@ -35,6 +38,7 @@ public interface LibraryDao {
     Member findMemberByUsername(String username);
     Librarian findLibrarianByUsername(String username);
     LibraryCard findLibraryCardByMemberUsername(String memberUsername);
+    Book findBookByTitle(String title);
 
     // Create a single object  methods
     Admin createAdmin(Admin admin);
@@ -59,7 +63,7 @@ public interface LibraryDao {
 
     // More advanced methods
     boolean hasValidLibraryCard(Member member);
-    boolean checkOutBook(Member member, Book book);
+    boolean checkOutBookHardCopy(Member member, Book book);
     BookCopy findAvailableCopy(Book book);
 
 }
