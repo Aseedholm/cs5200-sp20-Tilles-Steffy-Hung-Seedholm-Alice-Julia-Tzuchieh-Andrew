@@ -61,15 +61,15 @@ public class TestSuite {
 //
 //	}
 
-	@Test
-	@Order(2)
-	public void bTest() {
-		Member member = new Member();
-		member.setFirstName("A");
-		member.setLastName("AA");
-		member.setUsername("AAA");
-		member.setPassword("1234");
-		member.setEmail("A@northeastern.edu");
+//	@Test
+//	@Order(2)
+//	public void bTest() {
+//		Member member = new Member();
+//		member.setFirstName("A");
+//		member.setLastName("AA");
+//		member.setUsername("AAA");
+//		member.setPassword("1234");
+//		member.setEmail("A@northeastern.edu");
 //		Member member = new Member();
 //		member.setFirstName("B");
 //		member.setLastName("BB");
@@ -82,12 +82,12 @@ public class TestSuite {
 //		member.setUsername("CCC");
 //		member.setPassword("1234");
 //		member.setEmail("C@northeastern.edu");
-		libraryDao.createMember(member);
+//		libraryDao.createMember(member);
 //		System.out.println("CardID = " + card.getId());
-	}
+//	}
 
 //	@Test
-//	@Order(2)
+//	@Order(3)
 //	public void testIsUnderThirteen() {
 //
 //		libraryDao.truncateDatabase();
