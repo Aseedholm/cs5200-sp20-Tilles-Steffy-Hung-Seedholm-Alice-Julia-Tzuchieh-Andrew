@@ -2,12 +2,13 @@ package edu.northeastern.cs5200.models;
 
 import javax.persistence.Entity;
 import java.sql.Date;
+import java.sql.Timestamp;
 
 
 @Entity
 public class Librarian extends User {
 
-    private Date dateHired;
+    private Timestamp dateHired;
     private Boolean hasW2OnFile;
 
     public Librarian() {
@@ -15,18 +16,18 @@ public class Librarian extends User {
     }
 
     public Librarian(Integer id, String firstName, String lastName, String username, String password, String email,
-                     Date dateOfBirth, Date dateHired, Boolean hasW2OnFile) {
+    		Timestamp dateOfBirth, Timestamp dateHired, Boolean hasW2OnFile) {
         super(id, firstName, lastName, username, password, email, dateOfBirth);
         this.dateHired = dateHired;
         this.hasW2OnFile = hasW2OnFile;
     }
 
 
-    public Date getDateHired() {
+    public Timestamp getDateHired() {
         return dateHired;
     }
 
-    public void setDateHired(Date dateHired) {
+    public void setDateHired(Timestamp dateHired) {
         this.dateHired = dateHired;
     }
 

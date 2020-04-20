@@ -1,7 +1,6 @@
 package edu.northeastern.cs5200.models;
 
-import java.sql.Date;
-
+import java.sql.Timestamp;
 import javax.persistence.*;
 
 @Entity
@@ -22,14 +21,14 @@ public class User {
 	@Column(unique=true)
 	private String email;
 
-	private Date dateOfBirth;
+	private Timestamp dateOfBirth;
 
 	public User() {
 
 	}
 
 	public User(Integer id, String firstName, String lastName, String username, String password, String email,
-			Date dateOfBirth) {
+			Timestamp dateOfBirth) {
 		this.id = id;
 		this.firstName = firstName;
 		this.lastName = lastName;
@@ -87,11 +86,11 @@ public class User {
 		this.email = email;
 	}
 
-	public Date getDateOfBirth() {
+	public Timestamp getDateOfBirth() {
 		return dateOfBirth;
 	}
 
-	public void setDateOfBirth(Date dateOfBirth) {
+	public void setDateOfBirth(Timestamp dateOfBirth) {
 		this.dateOfBirth = dateOfBirth;
 	}
 	

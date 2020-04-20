@@ -2,7 +2,7 @@ package edu.northeastern.cs5200.models;
 
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import java.sql.Date;
+import java.sql.Timestamp;
 
 @Entity
 public class LegerEntry {
@@ -11,21 +11,21 @@ public class LegerEntry {
     @EmbeddedId
     private LegerId id;
 
-    private Date dateBorrowed;
-    private Date dateReturned;
+    private Timestamp dateBorrowed;
+    private Timestamp dateReturned;
 
     public LegerEntry(){
 
     }
 
 
-    public LegerEntry(LegerId id, Date dateBorrowed, Date dateReturned) {
+    public LegerEntry(LegerId id, Timestamp dateBorrowed, Timestamp dateReturned) {
         this.id = id;
         this.dateBorrowed = dateBorrowed;
         this.dateReturned = dateReturned;
     }
 
-    public LegerEntry(Integer memberId, Integer bookCopyId, Date dateBorrowed, Date dateReturned) {
+    public LegerEntry(Integer memberId, Integer bookCopyId, Timestamp dateBorrowed, Timestamp dateReturned) {
         LegerId newId = new LegerId(memberId, bookCopyId);
         this.id = newId;
         this.dateBorrowed = dateBorrowed;
@@ -40,19 +40,19 @@ public class LegerEntry {
         this.id = id;
     }
 
-    public Date getDateBorrowed() {
+    public Timestamp getDateBorrowed() {
         return dateBorrowed;
     }
 
-    public void setDateBorrowed(Date dateBorrowed) {
+    public void setDateBorrowed(Timestamp dateBorrowed) {
         this.dateBorrowed = dateBorrowed;
     }
 
-    public Date getDateReturned() {
+    public Timestamp getDateReturned() {
         return dateReturned;
     }
 
-    public void setDateReturned(Date dateReturned) {
+    public void setDateReturned(Timestamp dateReturned) {
         this.dateReturned = dateReturned;
     }
 }

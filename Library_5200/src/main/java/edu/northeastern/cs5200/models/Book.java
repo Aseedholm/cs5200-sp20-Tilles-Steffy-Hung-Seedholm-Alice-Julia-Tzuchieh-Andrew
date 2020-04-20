@@ -1,9 +1,7 @@
 package edu.northeastern.cs5200.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.*;
-import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -17,7 +15,7 @@ public class Book {
     private Author author;
 
     private String title;
-    private Date yearPublished;
+    private Timestamp yearPublished;
 
     private String genre;
 
@@ -31,7 +29,7 @@ public class Book {
         this.bookCopies = new HashSet<BookCopy>();
     }
 
-    public Book(String id, String title, Author author, Date yearPublished,
+    public Book(String id, String title, Author author, Timestamp yearPublished,
                 String genre, String ISBN, Set<BookCopy> bookCopies) {
         this.id = id;
         this.title = title;
@@ -58,11 +56,11 @@ public class Book {
         this.author = author;
     }
 
-    public Date getYearPublished() {
+    public Timestamp getYearPublished() {
         return yearPublished;
     }
 
-    public void setYearPublished(Date yearPublished) {
+    public void setYearPublished(Timestamp yearPublished) {
         this.yearPublished = yearPublished;
     }
 

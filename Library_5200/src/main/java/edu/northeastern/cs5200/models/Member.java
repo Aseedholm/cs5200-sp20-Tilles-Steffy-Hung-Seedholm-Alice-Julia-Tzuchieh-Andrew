@@ -4,9 +4,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.TimeZone;
 
 @Entity
 public class Member extends User {
@@ -27,7 +29,7 @@ public class Member extends User {
     }
 
     public Member(Integer id, String firstName, String lastName, String username, String password, String email,
-                  Date dateOfBirth, Integer sponsoredBy, Set<Member> recipientsOfSponsorship) {
+    		Timestamp dateOfBirth, Integer sponsoredBy, Set<Member> recipientsOfSponsorship) {
         super(id, firstName, lastName, username, password, email, dateOfBirth);
         this.sponsoredBy = sponsoredBy;
         this.recipientsOfSponsorship = recipientsOfSponsorship;
@@ -73,7 +75,8 @@ public class Member extends User {
      */
     public boolean isUnderThirteen() {
 
-        Calendar today = Calendar.getInstance();
+    	TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+    	Calendar today = Calendar.getInstance(TimeZone.getDefault());
         Calendar minDOB = today;
         minDOB.add(Calendar.YEAR, -13);
 

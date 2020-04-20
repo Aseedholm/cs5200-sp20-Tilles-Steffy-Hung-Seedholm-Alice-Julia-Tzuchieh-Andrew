@@ -1,7 +1,7 @@
 package edu.northeastern.cs5200.models;
 
 import javax.persistence.*;
-import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -16,8 +16,8 @@ public class Author {
     private String firstName;
     private String lastName;
     private String penName;
-    private Date dateOfBirth;
-    private Date dateOfDeath;
+    private Timestamp dateOfBirth;
+    private Timestamp dateOfDeath;
 
     @OneToMany(mappedBy = "author", fetch = FetchType.EAGER)
     private Set<Book> booksWritten;
@@ -28,7 +28,7 @@ public class Author {
 
 
     public Author(Integer id, String firstName, String lastName, String penName,
-                  Date dateOfBirth, Date dateOfDeath, Set<Book> booksWritten) {
+    		Timestamp dateOfBirth, Timestamp dateOfDeath, Set<Book> booksWritten) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -71,19 +71,19 @@ public class Author {
         this.penName = penName;
     }
 
-    public Date getDateOfBirth() {
+    public Timestamp getDateOfBirth() {
         return dateOfBirth;
     }
 
-    public void setDateOfBirth(Date dateOfBirth) {
+    public void setDateOfBirth(Timestamp dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
 
-    public Date getDateOfDeath() {
+    public Timestamp getDateOfDeath() {
         return dateOfDeath;
     }
 
-    public void setDateOfDeath(Date dateOfDeath) {
+    public void setDateOfDeath(Timestamp dateOfDeath) {
         this.dateOfDeath = dateOfDeath;
     }
 

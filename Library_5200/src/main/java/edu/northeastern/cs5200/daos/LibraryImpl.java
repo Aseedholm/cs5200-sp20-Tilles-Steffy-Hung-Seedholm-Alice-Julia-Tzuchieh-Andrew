@@ -5,6 +5,12 @@ import edu.northeastern.cs5200.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.*;
 
 @Repository
@@ -130,7 +136,7 @@ public class LibraryImpl implements LibraryDao {
     @Override
     public Member findMemberById(int id) {
 
-        if (!memberRepository.findById(id).isEmpty()) {
+        if (memberRepository.findById(id).isEmpty()) {
             return null;
         }
 
@@ -143,10 +149,7 @@ public class LibraryImpl implements LibraryDao {
         if (librarian == null) {
             return null;
         }
-        //Making  a change
         return librarian;
-
-        // another  change
     }
 
     @Override
@@ -307,9 +310,12 @@ public class LibraryImpl implements LibraryDao {
                 if (!sponsor.isUnderThirteen()) {
                     member.setSponsoredBy(sponsor.getId());
 
-                    Calendar today = Calendar.getInstance();
+                    TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+                    Calendar today = Calendar.getInstance(TimeZone.getDefault());
                     today.add(Calendar.YEAR, 5);
-            		LibraryCard card = new LibraryCard(member.getId(), member, new java.sql.Date(today.getTime().getTime()));
+                    java.sql.Timestamp timestamp = new java.sql.Timestamp(today.getTimeInMillis());
+
+                    LibraryCard card = new LibraryCard(member.getId(), member, timestamp);
             		member.setLibraryCard(card);
                     
                     // If so, save new member who is under 13 to db
@@ -329,9 +335,12 @@ public class LibraryImpl implements LibraryDao {
             }
         }
         else {
-            Calendar today = Calendar.getInstance();
+        	TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+            Calendar today = Calendar.getInstance(TimeZone.getDefault());
             today.add(Calendar.YEAR, 5);
-    		LibraryCard card = new LibraryCard(member.getId(), member, new java.sql.Date(today.getTime().getTime()));
+            java.sql.Timestamp timestamp = new java.sql.Timestamp(today.getTimeInMillis());
+
+            LibraryCard card = new LibraryCard(member.getId(), member, timestamp);
     		member.setLibraryCard(card);
     		
             memberRepository.save(member);
@@ -415,16 +424,24 @@ public class LibraryImpl implements LibraryDao {
     @Override
     public boolean hasValidLibraryCard(Member member) {
 
-        return true;
-        //TODO: library cards aren't being created yet. when they do, need to validate.
-//        java.sql.Date currentDate = new java.sql.Date(Calendar.getInstance().getTime().getTime());
-//        AtomicReference<Date> expirationDate = null;
-//        Optional<Member> memberInDb = memberRepository.findById(member.getId());
-//        memberInDb.ifPresent(m -> {
-//            expirationDate.set(m.getLibraryCard().getExpirationDate());
-//        });
-//
-//        return (currentDate.compareTo(expirationDate.get()) < 0);
+    	// Make sure the library card exists
+        var foundCard = libraryCardRepository.findById(member.getLibraryCard().getId());
+        if (foundCard.isPresent()) {
+
+        	// Check expiration date
+        	TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+    		Calendar cardDate = Calendar.getInstance(TimeZone.getDefault());
+    		cardDate.setTime(foundCard.get().getExpirationDate());
+    		Calendar today = Calendar.getInstance(TimeZone.getDefault());
+
+        	return (cardDate.get(Calendar.YEAR) > today.get(Calendar.YEAR)) ||
+        			((cardDate.get(Calendar.YEAR) == today.get(Calendar.YEAR)) &&
+        					(cardDate.get(Calendar.DAY_OF_YEAR) >= today.get(Calendar.DAY_OF_YEAR)));
+
+        } else {
+        	// No card
+        	return false;
+        }
 
     }
 
@@ -455,9 +472,10 @@ public class LibraryImpl implements LibraryDao {
             HardCopyBook bookToBorrow = availableBooks.next();
 
             // Finally, check out the book by creating a leger entry
-            Calendar calendar = Calendar.getInstance();
-            java.sql.Date currentDate = new java.sql.Date(calendar.getTime().getTime());
-            LegerEntry newEntry = new LegerEntry(member.getId(), bookToBorrow.getId(), currentDate, null);
+            TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+            Calendar today = Calendar.getInstance(TimeZone.getDefault());
+            java.sql.Timestamp timestamp = new java.sql.Timestamp(today.getTimeInMillis());
+            LegerEntry newEntry = new LegerEntry(member.getId(), bookToBorrow.getId(), timestamp, null);
             legerEntryRepository.save(newEntry);
 
             // Mark book copy as not available
@@ -498,8 +516,10 @@ public class LibraryImpl implements LibraryDao {
             AudioBook bookToBorrow = availableBooks.next();
 
             // Finally, check out the book by creating a leger entry
-            java.sql.Date currentDate = new java.sql.Date(Calendar.getInstance().getTime().getTime());
-            LegerEntry newEntry = new LegerEntry(member.getId(), bookToBorrow.getId(), currentDate, null);
+            TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+            Calendar today = Calendar.getInstance(TimeZone.getDefault());
+            java.sql.Timestamp timestamp = new java.sql.Timestamp(today.getTimeInMillis());
+            LegerEntry newEntry = new LegerEntry(member.getId(), bookToBorrow.getId(), timestamp, null);
             legerEntryRepository.save(newEntry);
 
             // Mark book copy as not available

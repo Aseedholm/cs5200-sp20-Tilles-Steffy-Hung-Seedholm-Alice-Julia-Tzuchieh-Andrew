@@ -2,6 +2,7 @@ package edu.northeastern.cs5200.models;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.sql.Timestamp;
 
 @Entity
 public class LibraryCard {
@@ -18,9 +19,9 @@ public class LibraryCard {
     private Member user;
 
 
-    private Date expirationDate;
+    private Timestamp expirationDate;
 
-    public LibraryCard(Integer id, Member member, Date expirationDate) {
+    public LibraryCard(Integer id, Member member, Timestamp expirationDate) {
 
         this.id = id;
         this.user = member;
@@ -47,11 +48,11 @@ public class LibraryCard {
         this.user = user;
     }
 
-    public Date getExpirationDate() {
+    public Timestamp getExpirationDate() {
         return expirationDate;
     }
 
-    public void setExpirationDate(Date expirationDate) {
+    public void setExpirationDate(Timestamp expirationDate) {
         this.expirationDate = expirationDate;
     }
 
