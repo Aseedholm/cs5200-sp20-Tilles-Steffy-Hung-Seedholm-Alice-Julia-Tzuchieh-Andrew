@@ -29,7 +29,7 @@ public interface LibraryDao {
     List<User> findAllUsers();
 
     // Finder methods -> find by ID
-    Book findBookById(int id);
+    Book findBookById(String id);
     Member findMemberById(int id);
     Librarian findLibrarianById(int id);
     LibraryCard findLibraryCardByMemberId(int memberId);
@@ -43,8 +43,8 @@ public interface LibraryDao {
     Book findBookByTitle(String title);
 
     // >> Find a set of objects
-    Set<HardCopyBook> findHardCopyBooksByBookId(int id);
-    Set<AudioBook> findAudioBooksByBookId(int id);
+    Set<HardCopyBook> findHardCopyBooksByBookId(String id);
+    Set<AudioBook> findAudioBooksByBookId(String id);
 
     // Create a single object methods
     Admin createAdmin(Admin admin);
@@ -59,8 +59,8 @@ public interface LibraryDao {
     User createUser(User user);
 
     // Specialized single-create methods
-    HardCopyBook addHardCopy(Integer bookId);
-    AudioBook addAudiobook(Integer bookId);
+    HardCopyBook addHardCopy(String bookId);
+    AudioBook addAudiobook(String bookId);
 
 
     // Delete by ID methods
@@ -73,8 +73,8 @@ public interface LibraryDao {
     boolean hasValidLibraryCard(Member member);
 
     // To check out books
-    LegerEntry checkOutBookHardCopy(Integer memberId, Integer bookId);
-    boolean checkOutAudiobook(Integer memberId, Integer bookId);
+    LegerEntry checkOutBookHardCopy(Integer memberId, String bookId);
+    boolean checkOutAudiobook(Integer memberId, String bookId);
     Set<HardCopyBook> findAvailableHardCopies(Book book);
     Set<AudioBook> findAvailableAudiobooks(Book book);
     Set<Object[]> seeCheckedOutBooksAllTime(Integer memberId);

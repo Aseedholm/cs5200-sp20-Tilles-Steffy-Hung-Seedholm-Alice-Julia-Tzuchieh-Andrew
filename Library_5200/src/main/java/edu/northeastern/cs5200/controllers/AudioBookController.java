@@ -23,7 +23,7 @@ public class AudioBookController {
 	}
 
 	@PostMapping("api/audio-books/{id}")
-	public AudioBook createAudioBookById(@PathVariable Integer id) {
+	public AudioBook createAudioBookById(@PathVariable String id) {
 		return libraryDao.addAudiobook(id);
 	}
 
@@ -33,7 +33,7 @@ public class AudioBookController {
 	}
 
 	@GetMapping("/api/audio-books/{bookId}")
-	public Set<AudioBook> findAudioBookByBookId(@PathVariable Integer bookId) {
+	public Set<AudioBook> findAudioBookByBookId(@PathVariable String bookId) {
 		return libraryDao.findAudioBooksByBookId(bookId);
 	}
 

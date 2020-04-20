@@ -9,8 +9,7 @@ import java.util.Set;
 public class Book {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private String id;
 
     @ManyToOne
     private Author author;
@@ -30,7 +29,7 @@ public class Book {
         this.bookCopies = new HashSet<BookCopy>();
     }
 
-    public Book(Integer id, String title, Author author, Timestamp yearPublished,
+    public Book(String id, String title, Author author, Timestamp yearPublished,
                 String genre, String ISBN, Set<BookCopy> bookCopies) {
         this.id = id;
         this.title = title;
@@ -69,9 +68,8 @@ public class Book {
         return genre;
     }
 
-    public void setGenre(Genre genre) {
-        System.out.println("Genre: " + genre);
-        this.genre = genre.toString();
+    public void setGenre(String genre) {
+        this.genre = genre;
     }
 
     public String getISBN() {
@@ -82,11 +80,11 @@ public class Book {
         this.ISBN = ISBN;
     }
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 

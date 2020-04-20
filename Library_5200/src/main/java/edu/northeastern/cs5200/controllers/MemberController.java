@@ -44,12 +44,12 @@ public class MemberController {
 
 
   @PostMapping("/api/members/{memberId}/check-out/{bookId}/hard-copy")
-  public LegerEntry checkOutBookHardCopy(@PathVariable Integer memberId, @PathVariable Integer bookId) {
+  public LegerEntry checkOutBookHardCopy(@PathVariable Integer memberId, @PathVariable String bookId) {
     return libraryDao.checkOutBookHardCopy(memberId, bookId);
   }
 
   @PostMapping("/api/members/{memberId}/check-out/{bookId}/audiobook-copy")
-  public boolean checkOutBookAudio(@PathVariable Integer memberId, @PathVariable Integer bookId) {
+  public boolean checkOutBookAudio(@PathVariable Integer memberId, @PathVariable String bookId) {
     return libraryDao.checkOutAudiobook(memberId, bookId);
   }
 

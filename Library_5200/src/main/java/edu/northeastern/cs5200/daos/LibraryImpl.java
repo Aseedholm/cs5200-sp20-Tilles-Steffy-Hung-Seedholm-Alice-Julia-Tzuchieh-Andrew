@@ -54,7 +54,6 @@ public class LibraryImpl implements LibraryDao {
     public void truncateDatabase() {
         adminRepository.deleteAll();
         audioBookRepository.deleteAll();
-        authorRepository.deleteAll();
         bookCopyRepository.deleteAll();
         bookRepository.deleteAll();
         hardCopyBookRepository.deleteAll();
@@ -63,6 +62,7 @@ public class LibraryImpl implements LibraryDao {
         libraryCardRepository.deleteAll();
         memberRepository.deleteAll();
         userRepository.deleteAll();
+        authorRepository.deleteAll();
     }
 
     @Override
@@ -129,7 +129,7 @@ public class LibraryImpl implements LibraryDao {
     }
 
     @Override
-    public Book findBookById(int id) {
+    public Book findBookById(String id) {
         return null;
     }
 
@@ -173,12 +173,12 @@ public class LibraryImpl implements LibraryDao {
     }
 
     @Override
-    public Set<HardCopyBook> findHardCopyBooksByBookId(int id) {
+    public Set<HardCopyBook> findHardCopyBooksByBookId(String id) {
         return hardCopyBookRepository.findByBookId(id);
     }
 
     @Override
-    public Set<AudioBook> findAudioBooksByBookId(int id) {
+    public Set<AudioBook> findAudioBooksByBookId(String id) {
         return audioBookRepository.findByBookId(id);
     }
 
@@ -313,8 +313,8 @@ public class LibraryImpl implements LibraryDao {
                     TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
                     Calendar today = Calendar.getInstance(TimeZone.getDefault());
                     today.add(Calendar.YEAR, 5);
-                    java.sql.Timestamp timestamp = new java.sql.Timestamp(today.getTimeInMillis());          
-                	
+                    java.sql.Timestamp timestamp = new java.sql.Timestamp(today.getTimeInMillis());
+
                     LibraryCard card = new LibraryCard(member.getId(), member, timestamp);
             		member.setLibraryCard(card);
                     
@@ -338,8 +338,8 @@ public class LibraryImpl implements LibraryDao {
         	TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
             Calendar today = Calendar.getInstance(TimeZone.getDefault());
             today.add(Calendar.YEAR, 5);
-            java.sql.Timestamp timestamp = new java.sql.Timestamp(today.getTimeInMillis());          
-        	
+            java.sql.Timestamp timestamp = new java.sql.Timestamp(today.getTimeInMillis());
+
             LibraryCard card = new LibraryCard(member.getId(), member, timestamp);
     		member.setLibraryCard(card);
     		
@@ -356,7 +356,7 @@ public class LibraryImpl implements LibraryDao {
     }
 
     @Override
-    public HardCopyBook addHardCopy(Integer bookId) {
+    public HardCopyBook addHardCopy(String bookId) {
         var foundBookInDb = bookRepository.findById(bookId);
 
         // Make sure book ID is valid
@@ -374,7 +374,7 @@ public class LibraryImpl implements LibraryDao {
     }
 
     @Override
-    public AudioBook addAudiobook(Integer bookId) {
+    public AudioBook addAudiobook(String bookId) {
         var foundBookInDb = bookRepository.findById(bookId);
 
         // Make sure book ID is valid
@@ -427,7 +427,7 @@ public class LibraryImpl implements LibraryDao {
     	// Make sure the library card exists
         var foundCard = libraryCardRepository.findById(member.getLibraryCard().getId());
         if (foundCard.isPresent()) {
-        	
+
         	// Check expiration date
         	TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
     		Calendar cardDate = Calendar.getInstance(TimeZone.getDefault());
@@ -435,9 +435,9 @@ public class LibraryImpl implements LibraryDao {
     		Calendar today = Calendar.getInstance(TimeZone.getDefault());
 
         	return (cardDate.get(Calendar.YEAR) > today.get(Calendar.YEAR)) ||
-        			((cardDate.get(Calendar.YEAR) == today.get(Calendar.YEAR)) && 
+        			((cardDate.get(Calendar.YEAR) == today.get(Calendar.YEAR)) &&
         					(cardDate.get(Calendar.DAY_OF_YEAR) >= today.get(Calendar.DAY_OF_YEAR)));
-        
+
         } else {
         	// No card
         	return false;
@@ -448,7 +448,7 @@ public class LibraryImpl implements LibraryDao {
 
 
     @Override
-    public LegerEntry checkOutBookHardCopy(Integer memberId, Integer bookId) {
+    public LegerEntry checkOutBookHardCopy(Integer memberId, String bookId) {
 
         var foundMemberInDb = memberRepository.findById(memberId);
         var foundBookInDb = bookRepository.findById(bookId);
@@ -472,10 +472,10 @@ public class LibraryImpl implements LibraryDao {
             HardCopyBook bookToBorrow = availableBooks.next();
 
             // Finally, check out the book by creating a leger entry
-            TimeZone.setDefault(TimeZone.getTimeZone("UTC"));  
+            TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
             Calendar today = Calendar.getInstance(TimeZone.getDefault());
             java.sql.Timestamp timestamp = new java.sql.Timestamp(today.getTimeInMillis());
-            LegerEntry newEntry = new LegerEntry(member.getId(), book.getId(), timestamp, null);
+            LegerEntry newEntry = new LegerEntry(member.getId(), bookToBorrow.getId(), timestamp, null);
             legerEntryRepository.save(newEntry);
 
             // Mark book copy as not available
@@ -491,7 +491,7 @@ public class LibraryImpl implements LibraryDao {
     }
 
     @Override
-    public boolean checkOutAudiobook(Integer memberId, Integer bookId) {
+    public boolean checkOutAudiobook(Integer memberId, String bookId) {
 
         var foundMemberInDb = memberRepository.findById(memberId);
         var foundBookInDb = bookRepository.findById(bookId);
@@ -519,7 +519,7 @@ public class LibraryImpl implements LibraryDao {
             TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
             Calendar today = Calendar.getInstance(TimeZone.getDefault());
             java.sql.Timestamp timestamp = new java.sql.Timestamp(today.getTimeInMillis());
-            LegerEntry newEntry = new LegerEntry(member.getId(), book.getId(), timestamp, null);
+            LegerEntry newEntry = new LegerEntry(member.getId(), bookToBorrow.getId(), timestamp, null);
             legerEntryRepository.save(newEntry);
 
             // Mark book copy as not available

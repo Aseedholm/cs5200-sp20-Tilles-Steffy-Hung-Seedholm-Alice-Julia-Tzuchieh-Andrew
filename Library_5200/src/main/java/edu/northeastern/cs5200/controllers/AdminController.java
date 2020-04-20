@@ -22,11 +22,18 @@ public class AdminController {
     return libraryDao.createAdmin(admin);
   }
 
+  /*
+   {"firstName" : "Martha",
+  "lastName" : "Stuart",
+  "username" : "martha",
+  "password" : "1234",
+  "email" : "martha@gmail.com"}
+   */
+
   @GetMapping("/api/admins")
   public List<Admin> findAllAdmin() {
     return libraryDao.findAllAdmin();
   }
-
 
   @DeleteMapping(value = "/api/admins/{id}")
   public boolean deleteAdmin(@PathVariable Integer id) {
