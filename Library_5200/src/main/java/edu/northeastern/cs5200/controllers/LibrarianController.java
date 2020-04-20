@@ -31,7 +31,6 @@ public class LibrarianController {
     return libraryDao.findLibrarianById(id);
   }
 
-
   @GetMapping("/api/librarians/username/{username}")
   public Librarian getByUsername(@PathVariable("username") String username) {
     return libraryDao.findLibrarianByUsername(username);

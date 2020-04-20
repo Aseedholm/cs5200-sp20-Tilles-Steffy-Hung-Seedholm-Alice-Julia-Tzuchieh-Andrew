@@ -1,5 +1,7 @@
 package edu.northeastern.cs5200.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.HashSet;
@@ -20,6 +22,7 @@ public class Author {
     private Timestamp dateOfDeath;
 
     @OneToMany(mappedBy = "author", fetch = FetchType.EAGER)
+    @JsonIgnore
     private Set<Book> booksWritten;
 
     public Author() {

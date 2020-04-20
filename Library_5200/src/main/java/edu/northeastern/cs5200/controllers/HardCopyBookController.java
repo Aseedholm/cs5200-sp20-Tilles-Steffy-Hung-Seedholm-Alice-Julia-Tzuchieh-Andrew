@@ -26,12 +26,12 @@ public class HardCopyBookController {
 		return libraryDao.addHardCopy(id);
 	}
 
-	@GetMapping("/api/hard-copy-book")
+	@GetMapping("/api/hard-copy-books")
 	public List<HardCopyBook> findAllHardCopyBooks() {
 		return libraryDao.findAllHardCopyBooks();
 	}
 
-	@GetMapping("/api/hard-copy-book/{bookId}")
+	@GetMapping("/api/hard-copy-books/{bookId}")
 	public Set<HardCopyBook> getHardCopyBookBybookId(@PathVariable String bookId) {
 		return libraryDao.findHardCopyBooksByBookId(bookId);
 	}

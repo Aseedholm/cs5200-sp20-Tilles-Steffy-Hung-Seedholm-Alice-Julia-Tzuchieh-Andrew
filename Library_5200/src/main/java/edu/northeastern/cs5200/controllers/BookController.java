@@ -26,7 +26,6 @@ public class BookController {
     }
 
 
-
     @GetMapping("api/books")
     public List<Book> findAllBooks() {
         return libraryDao.findAllBooks();

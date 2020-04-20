@@ -15,7 +15,7 @@ public interface AudioBookRepository extends CrudRepository<AudioBook, Integer> 
     Set<AudioBook> findAvailableBooksById(String id);
 
     @Query("SELECT audioBook FROM BookCopy audioBook, Book book " +
-            "WHERE audioBook.book = book AND audioBook.class = 'audiobooks' ")
-    Set<AudioBook> findByBookId(String id);
+            "WHERE audioBook.book = book AND audioBook.class = 'audiobooks' AND book.id =:bookId")
+    Set<AudioBook> findByBookId(String bookId);
 
 }

@@ -15,7 +15,7 @@ public interface HardCopyBookRepository extends CrudRepository<HardCopyBook, Int
     Set<HardCopyBook> findAvailableBooksById(String id);
 
     @Query("SELECT hardCopyBook FROM BookCopy hardCopyBook, Book book " +
-            "WHERE hardCopyBook.book = book AND hardCopyBook.class = 'hard_copy'")
+            "WHERE hardCopyBook.book = book AND hardCopyBook.class = 'hard_copy' AND book.id =:bookId")
     Set<HardCopyBook> findByBookId(String bookId);
 
 }
