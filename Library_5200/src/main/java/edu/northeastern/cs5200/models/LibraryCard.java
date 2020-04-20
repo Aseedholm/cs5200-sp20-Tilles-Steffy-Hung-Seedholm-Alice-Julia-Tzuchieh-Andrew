@@ -1,5 +1,7 @@
 package edu.northeastern.cs5200.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.sql.Date;
 import java.sql.Timestamp;
@@ -16,6 +18,7 @@ public class LibraryCard {
 
     @OneToOne
     @MapsId
+    @JsonIgnore
     private Member user;
 
 
