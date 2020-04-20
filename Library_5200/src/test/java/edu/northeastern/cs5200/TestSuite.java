@@ -62,22 +62,30 @@ public class TestSuite {
 //
 //	}
 
-//	@Test
-//	@Order(2)
-//	public void bTest() {
+	@Test
+	@Order(2)
+	public void bTest() {
+		Member member1 = libraryDao.findMemberById(1);
+		Member member2 = libraryDao.findMemberById(2);
+		Member member3 = libraryDao.findMemberById(3);
+		libraryDao.hasValidLibraryCard(member1);
+		libraryDao.hasValidLibraryCard(member2);
+		libraryDao.hasValidLibraryCard(member3);
 //		Member member = new Member();
 //		member.setFirstName("A");
 //		member.setLastName("AA");
 //		member.setUsername("AAA");
 //		member.setPassword("1234");
 //		member.setEmail("A@northeastern.edu");
-//		Member member = new Member();
+//		libraryDao.createMember(member);
+//		member = new Member();
 //		member.setFirstName("B");
 //		member.setLastName("BB");
 //		member.setUsername("BBB");
 //		member.setPassword("1234");
 //		member.setEmail("B@northeastern.edu");
-//		Member member = new Member();
+//		libraryDao.createMember(member);
+//		member = new Member();
 //		member.setFirstName("C");
 //		member.setLastName("CC");
 //		member.setUsername("CCC");
@@ -85,7 +93,7 @@ public class TestSuite {
 //		member.setEmail("C@northeastern.edu");
 //		libraryDao.createMember(member);
 //		System.out.println("CardID = " + card.getId());
-//	}
+	}
 
 //	@Test
 //	@Order(3)
@@ -180,20 +188,13 @@ public class TestSuite {
 //
 //	}
 
-
-	@Test
-	public void testCheckOutBook() {
-
-
-		Member steve = libraryDao.findMemberByUsername("johnsmith");
-		Book desiredBook = libraryDao.findBookByTitle("The Signal and the Noise");
-		//libraryDao.checkOutBookHardCopy(steve, desiredBook);
-		libraryDao.checkOutAudiobook(steve.getId(), desiredBook.getId());
-		assertEquals(2,libraryDao.findAllLegerEntries().size());
-
-
-
-	}
-
+//	@Test
+//	public void testCheckOutBook() {
+//		Member steve = libraryDao.findMemberByUsername("johnsmith");
+//		Book desiredBook = libraryDao.findBookByTitle("The Signal and the Noise");
+//		//libraryDao.checkOutBookHardCopy(steve, desiredBook);
+//		libraryDao.checkOutAudiobook(steve.getId(), desiredBook.getId());
+//		assertEquals(2,libraryDao.findAllLegerEntries().size());
+//	}
 
 }

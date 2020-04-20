@@ -5,6 +5,8 @@ import edu.northeastern.cs5200.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Repository
@@ -130,7 +132,7 @@ public class LibraryImpl implements LibraryDao {
     @Override
     public Member findMemberById(int id) {
 
-        if (!memberRepository.findById(id).isEmpty()) {
+        if (memberRepository.findById(id).isEmpty()) {
             return null;
         }
 
@@ -412,16 +414,22 @@ public class LibraryImpl implements LibraryDao {
     @Override
     public boolean hasValidLibraryCard(Member member) {
 
-        return true;
-        //TODO: library cards aren't being created yet. when they do, need to validate.
-//        java.sql.Date currentDate = new java.sql.Date(Calendar.getInstance().getTime().getTime());
-//        AtomicReference<Date> expirationDate = null;
-//        Optional<Member> memberInDb = memberRepository.findById(member.getId());
-//        memberInDb.ifPresent(m -> {
-//            expirationDate.set(m.getLibraryCard().getExpirationDate());
-//        });
-//
-//        return (currentDate.compareTo(expirationDate.get()) < 0);
+    	// Make sure the library card exists
+        var foundCard = libraryCardRepository.findById(member.getLibraryCard().getId());
+        if (foundCard.isPresent()) {
+        	
+        	// Check expiration date
+    		Calendar cardDate = Calendar.getInstance();
+    		cardDate.setTime(foundCard.get().getExpirationDate());
+    		Calendar today = Calendar.getInstance();
+
+        	return (cardDate.get(Calendar.YEAR) >= today.get(Calendar.YEAR)) &&
+        			(cardDate.get(Calendar.DAY_OF_YEAR) >= today.get(Calendar.DAY_OF_YEAR));
+        
+        } else {
+        	// No card
+        	return false;
+        }
 
     }
 
