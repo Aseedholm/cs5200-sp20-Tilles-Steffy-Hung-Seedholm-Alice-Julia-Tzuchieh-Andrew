@@ -45,6 +45,7 @@ public interface LibraryDao {
     // >> Find a set of objects
     Set<HardCopyBook> findHardCopyBooksByBookId(String id);
     Set<AudioBook> findAudioBooksByBookId(String id);
+    Set<Book> findBooksByAuthor(String authorName);
 
     // Create a single object methods
     Admin createAdmin(Admin admin);
@@ -79,6 +80,8 @@ public interface LibraryDao {
     Set<AudioBook> findAvailableAudiobooks(Book book);
     Set<Object[]> seeCheckedOutBooksAllTime(Integer memberId);
     Set<Object[]> seeCheckedOutBooksCurrently(Integer memberId);
+
+
 }
 
 

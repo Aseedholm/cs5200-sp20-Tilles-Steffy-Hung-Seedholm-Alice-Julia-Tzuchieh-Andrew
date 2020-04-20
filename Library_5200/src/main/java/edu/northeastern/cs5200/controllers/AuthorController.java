@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 
 import edu.northeastern.cs5200.models.*;
@@ -27,6 +28,10 @@ public class AuthorController {
     return libraryDao.findAllAuthors();
   }
 
+  @GetMapping("/api/authors/{authorLastName}/books")
+  public Set<Book> findBooksByauthor(@PathVariable String authorLastName) {
+    return libraryDao.findBooksByAuthor(authorLastName);
+  }
 
 
 

@@ -1,5 +1,7 @@
 package edu.northeastern.cs5200.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.HashSet;
@@ -11,22 +13,27 @@ public class Book {
     @Id
     private String id;
 
-    @ManyToOne
-    private Author author;
+    @Column(unique=true)
+    private String ISBN;
 
     private String title;
+
     private Timestamp yearPublished;
 
     private String genre;
 
+
+    @ManyToOne
+    private Author author;
+
     @OneToMany(mappedBy = "book", fetch = FetchType.EAGER)
     private Set<BookCopy> bookCopies;
 
-    @Column(unique=true)
-    private String ISBN;
+    @JsonIgnore
+    private String thumbnailURL; //TODO see if it's necessary to modify constructor
 
     public Book(){
-        this.bookCopies = new HashSet<BookCopy>();
+        this.bookCopies = new HashSet<>();
     }
 
     public Book(String id, String title, Author author, Timestamp yearPublished,
@@ -112,6 +119,13 @@ public class Book {
         this.bookCopies.add(newCopy);
     }
 
+    public String getThumbnailURL() {
+        return thumbnailURL;
+    }
+
+    public void setThumbnailURL(String thumbnailURL) {
+        this.thumbnailURL = thumbnailURL;
+    }
 
     @Override
     public String toString() {

@@ -30,6 +30,44 @@ public class GoogleBooksAPI {
         this.libraryDao = libraryDao;
     }
 
+    private String getFirstName(String fullName) {
+
+        char[] chars = fullName.toCharArray();
+        StringBuilder firstName = new StringBuilder();
+        for (char c : chars ) {
+
+            if (c == ' ') {
+                return firstName.toString();
+            }
+
+            firstName.append(c);
+
+        }
+        return firstName.toString();
+    }
+
+
+    private String getLastName(String fullName) {
+
+        char[] chars = fullName.toCharArray();
+        StringBuilder lastName = new StringBuilder();
+        boolean last = false;
+        for (char c : chars ) {
+
+            if (c == ' ') {
+                last = true;
+                continue;
+            }
+
+            if (last) {
+                lastName.append(c);
+            }
+
+
+        }
+        return lastName.toString();
+    }
+
     /**
      * Loads into the database 0 to 6 copies of a book to the library. Up to 3 each of audiobook vs hard copy.
      * Randomly chooses a condition for hard copy.
@@ -175,7 +213,7 @@ public class GoogleBooksAPI {
      * @param inputBook from google books API
      * @return the same info in our data model
      */
-    private static Pair<Book,Author> JSONtoBook(JSONObject inputBook) {
+    private Pair<Book,Author> JSONtoBook(JSONObject inputBook) {
 
         // Extracting all the info out of the JSON object //TODO extract book_copy info such as # pages
         JSONObject volumeInfo = (JSONObject) inputBook.get("volumeInfo");
@@ -193,12 +231,18 @@ public class GoogleBooksAPI {
             subject = null;
         }
         JSONArray authors = (JSONArray) volumeInfo.get("authors");
-        String author = "";
+        String authorFullName = "";
+        String authorFirst = "";
+        String authorLast = "";
         try {
-            author = (String) authors.get(0);
+            authorFullName = (String) authors.get(0);
+            authorFirst = getFirstName(authorFullName);
+            authorLast = getLastName(authorFullName);
         } catch (NullPointerException e) {
-            author = null;
+            authorFullName = null;
         }
+        JSONObject imageLinks = (JSONObject) volumeInfo.get("imageLinks");
+        String thumbnail = (String) imageLinks.get("smallThumbnail");
 
         // Create a new book with that info
         Book newBook = new Book();
@@ -207,10 +251,12 @@ public class GoogleBooksAPI {
         newBook.setGenre(subject);
         newBook.setISBN(isbn);
         newBook.setTitle(title);
+        newBook.setThumbnailURL(thumbnail);
 
         // And a new author
         Author newAuthor = new Author();
-        newAuthor.setFirstName(author); //TODO separate first and last name
+        newAuthor.setFirstName(authorFirst);
+        newAuthor.setLastName(authorLast);
         newBook.setAuthor(newAuthor);
 
         // Return the two new objects

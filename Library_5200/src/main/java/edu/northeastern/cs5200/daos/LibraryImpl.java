@@ -183,6 +183,11 @@ public class LibraryImpl implements LibraryDao {
     }
 
     @Override
+    public Set<Book> findBooksByAuthor(String authorLastName) {
+        return bookRepository.findBooksByAuthor(authorLastName);
+    }
+
+    @Override
     public Member findMemberByUsername(String username) {
         //TODO use jpql
         Iterable<Member> members = memberRepository.findAll();
