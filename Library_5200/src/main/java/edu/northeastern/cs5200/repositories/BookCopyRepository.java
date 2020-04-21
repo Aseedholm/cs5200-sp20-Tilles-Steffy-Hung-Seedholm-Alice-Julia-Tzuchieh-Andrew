@@ -11,14 +11,6 @@ import java.util.Set;
 public interface BookCopyRepository extends CrudRepository<BookCopy, Integer> {
 
 
-    /*
-    select book_copy.dtype, book_copy.id, member_id, book.title
-    from book_copy, leger_entry, book
-    where book_copy.id = leger_entry.book_copy_id
-    and book_copy.book_id = book.id;
-     */
-
-
     @Query("SELECT bookCopy, books.title AS title, legerEntry.dateBorrowed AS dateBorrowed " +
             "FROM LegerEntry legerEntry, Book books, BookCopy bookCopy " +
             "WHERE legerEntry.id.memberId = :memberId " +

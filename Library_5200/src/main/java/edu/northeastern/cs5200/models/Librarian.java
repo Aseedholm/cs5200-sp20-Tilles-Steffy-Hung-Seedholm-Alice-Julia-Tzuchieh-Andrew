@@ -1,7 +1,6 @@
 package edu.northeastern.cs5200.models;
 
 import javax.persistence.Entity;
-import java.sql.Date;
 import java.sql.Timestamp;
 
 

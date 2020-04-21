@@ -3,6 +3,8 @@ package edu.northeastern.cs5200.models;
 import java.util.Random;
 
 public enum CurrentCondition {
+
+
     NEW,
     GOOD,
     ACCEPTABLE,
@@ -13,6 +15,8 @@ public enum CurrentCondition {
         Random random = new Random();
         return values()[random.nextInt(values().length)];
     }
+
+
 
 
 

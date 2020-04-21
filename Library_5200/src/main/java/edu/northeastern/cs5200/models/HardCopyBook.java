@@ -3,8 +3,6 @@ package edu.northeastern.cs5200.models;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import java.sql.Date;
-import java.util.Set;
 
 @Entity(name="hard_copy")
 public class HardCopyBook extends BookCopy {

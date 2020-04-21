@@ -1,7 +1,5 @@
 package edu.northeastern.cs5200.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.HashSet;
@@ -14,7 +12,7 @@ public class Book {
     private String id;
 
     @Column(unique=true)
-    private String ISBN;
+    private String isbn;
 
     private String title;
 
@@ -35,13 +33,13 @@ public class Book {
     }
 
     public Book(String id, String title, Author author, Timestamp yearPublished,
-                String genre, String ISBN, Set<BookCopy> bookCopies) {
+                String genre, String isbn, Set<BookCopy> bookCopies) {
         this.id = id;
         this.title = title;
         this.author = author;
         this.yearPublished = yearPublished;
         this.genre = genre;
-        this.ISBN = ISBN;
+        this.isbn = isbn;
         this.bookCopies = bookCopies;
     }
 
@@ -77,12 +75,12 @@ public class Book {
         this.genre = genre;
     }
 
-    public String getISBN() {
-        return ISBN;
+    public String getIsbn() {
+        return isbn;
     }
 
-    public void setISBN(String ISBN) {
-        this.ISBN = ISBN;
+    public void setIsbn(String ISBN) {
+        this.isbn = ISBN;
     }
 
     public String getId() {
@@ -133,7 +131,7 @@ public class Book {
                 ", author=" + author +
                 ", yearPublished=" + yearPublished +
                 ", genre=" + genre +
-                ", ISBN='" + ISBN + '\'' +
+                ", ISBN='" + isbn + '\'' +
                 '}';
     }
 }

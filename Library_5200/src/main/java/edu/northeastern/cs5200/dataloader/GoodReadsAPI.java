@@ -27,7 +27,9 @@ public class GoodReadsAPI {
 
 
     public GoodReadsAPI(){
-
+        /**
+         * Initializes the API.
+         */
     }
 
     /**
@@ -142,18 +144,18 @@ public class GoodReadsAPI {
         // Retrieve XML data
         else {
 
-            String result = "";
+            StringBuilder result = new StringBuilder();
 
             Scanner sc = new Scanner(myURL.openStream());
             while (sc.hasNext()) {
-                result += sc.nextLine();
+                result.append(sc.nextLine());
             }
 
             sc.close();
             conn.disconnect();
 
             // Extract author values
-            InputSource source = new InputSource(new StringReader(result));
+            InputSource source = new InputSource(new StringReader(result.toString()));
             XPath xpath = XPathFactory.newInstance().newXPath();
             Object author = xpath.evaluate("/GoodreadsResponse/author", source, XPathConstants.NODE);
             String fullName = xpath.evaluate("name", author);
@@ -207,21 +209,20 @@ public class GoodReadsAPI {
 
         // Retrieve JSON data
         else {
-            String result = "";
+            StringBuilder result = new StringBuilder();
 
             Scanner sc = new Scanner(myURL.openStream());
             while (sc.hasNext()) {
-                result += sc.nextLine();
+                result.append(sc.nextLine());
             }
 
             sc.close();
             conn.disconnect();
 
-            InputSource source = new InputSource(new StringReader(result));
+            InputSource source = new InputSource(new StringReader(result.toString()));
             XPath xpath = XPathFactory.newInstance().newXPath();
             Object author = xpath.evaluate("/GoodreadsResponse/author", source, XPathConstants.NODE);
-            String id = xpath.evaluate("@id", author);
-            return id;
+            return xpath.evaluate("@id", author);
 
         }
     }

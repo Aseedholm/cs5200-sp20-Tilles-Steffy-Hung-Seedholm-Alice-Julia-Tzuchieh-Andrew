@@ -35,7 +35,6 @@ public interface LibraryDao {
     Author findAuthorById(Integer authorId);
 
 
-
     // Finder methods -> find by some other attribute
     // >> Find single object
     LibraryMember findMemberByUsername(String username);
@@ -84,7 +83,6 @@ public interface LibraryDao {
     Set<Object[]> seeCheckedOutBooksAllTime(Integer memberId);
     Set<Object[]> seeCheckedOutBooksCurrently(Integer memberId);
 
-    LibraryMember findSponsor(Integer memberId);
 }
 
 

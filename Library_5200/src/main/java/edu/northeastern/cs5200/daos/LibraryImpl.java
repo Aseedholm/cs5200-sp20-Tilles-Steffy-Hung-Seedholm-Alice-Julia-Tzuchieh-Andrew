@@ -44,6 +44,9 @@ public class LibraryImpl implements LibraryDao {
     UserRepository userRepository;
 
 
+    /**
+     * Deletes all data from the database.
+     */
     @Override
     public void truncateDatabase() {
         adminRepository.deleteAll();
@@ -59,6 +62,9 @@ public class LibraryImpl implements LibraryDao {
         authorRepository.deleteAll();
     }
 
+    /**
+     * Deletes just the books and book copies from the database.
+     */
     @Override
     public void dropBooks(){
 
@@ -126,11 +132,8 @@ public class LibraryImpl implements LibraryDao {
 
     @Override
     public Book findBookById(String id) {
-        try {
-            return bookRepository.findById(id).get();
-        } catch (NoSuchElementException e) {
-            return new Book();
-        }
+        var foundBook = bookRepository.findById(id);
+        return foundBook.orElse(null);
 
     }
 
@@ -138,12 +141,8 @@ public class LibraryImpl implements LibraryDao {
     public LibraryMember findMemberById(int id) {
 
         var foundMember = memberRepository.findById(id);
+        return foundMember.orElse(null);
 
-        if (foundMember.isPresent()) {
-            return foundMember.get();
-        }
-
-        return null;
     }
 
     @Override
@@ -214,11 +213,7 @@ public class LibraryImpl implements LibraryDao {
     @Override
     public Book findBookByTitle(String title) {
         Book bookToReturn = bookRepository.findBookByTitle(title);
-        if (bookToReturn != null) {
-            return bookToReturn;
-        } else {
-            return new Book();
-        }
+        return Objects.requireNonNullElseGet(bookToReturn, Book::new);
 
 
     }
@@ -304,6 +299,8 @@ public class LibraryImpl implements LibraryDao {
                 if (!sponsor.isUnderThirteen()) {
                     member.setSponsoredBy(sponsor.getId());
 
+                    // Create the library card that will expire in 5 years
+
                     TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
                     Calendar today = Calendar.getInstance(TimeZone.getDefault());
                     today.add(Calendar.YEAR, 5);
@@ -325,14 +322,9 @@ public class LibraryImpl implements LibraryDao {
             }
         }
         else {
-        	TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
-            Calendar today = Calendar.getInstance(TimeZone.getDefault());
-            today.add(Calendar.YEAR, 5);
-            java.sql.Timestamp timestamp = new java.sql.Timestamp(today.getTimeInMillis());
-
+            java.sql.Timestamp timestamp = getTimestamp(5);
             LibraryCard card = new LibraryCard(member.getId(), member, timestamp);
     		member.setLibraryCard(card);
-    		
             memberRepository.save(member);
             return member;
         }
@@ -471,9 +463,7 @@ public class LibraryImpl implements LibraryDao {
             bookCopyRepository.save(bookCopy);
 
             // Find the leger entry with these two values
-            TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
-            Calendar today = Calendar.getInstance(TimeZone.getDefault());
-            java.sql.Timestamp timestamp = new java.sql.Timestamp(today.getTimeInMillis());
+            java.sql.Timestamp timestamp = getTimestamp(0);
             legerEntryInDb.setDateReturned(timestamp);
             legerEntryRepository.save(legerEntryInDb);
             return true;
@@ -509,9 +499,7 @@ public class LibraryImpl implements LibraryDao {
             HardCopyBook bookToBorrow = availableBooks.next();
 
             // Finally, check out the book by creating a leger entry
-            TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
-            Calendar today = Calendar.getInstance(TimeZone.getDefault());
-            java.sql.Timestamp timestamp = new java.sql.Timestamp(today.getTimeInMillis());
+            java.sql.Timestamp timestamp = getTimestamp(0);
             LegerEntry newEntry = new LegerEntry(member.getId(), bookToBorrow.getId(), timestamp, null);
             legerEntryRepository.save(newEntry);
 
@@ -524,7 +512,13 @@ public class LibraryImpl implements LibraryDao {
 
         return null;
 
+    }
 
+    private java.sql.Timestamp getTimestamp(int yearOffset) {
+        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+        Calendar today = Calendar.getInstance(TimeZone.getDefault());
+        today.add(Calendar.YEAR, yearOffset);
+        return new java.sql.Timestamp(today.getTimeInMillis());
     }
 
     @Override

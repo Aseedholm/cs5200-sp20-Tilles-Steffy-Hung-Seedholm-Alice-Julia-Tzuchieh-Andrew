@@ -1,8 +1,6 @@
 package edu.northeastern.cs5200.models;
 
 import javax.persistence.Entity;
-import java.sql.Date;
-import java.util.Set;
 
 @Entity(name="audiobooks")
 public class AudioBook extends BookCopy {
@@ -16,7 +14,7 @@ public class AudioBook extends BookCopy {
     }
 
     public AudioBook(Integer id, Book book, Boolean isAvailable, Integer edition,
-                     String narratedBy, Integer numMinutes, Double fileSizeMb, String fileType,  Set<BookCopy> bookCopies){
+                     String narratedBy, Integer numMinutes, Double fileSizeMb, String fileType){
             super(id, book, isAvailable, edition);
             this.narratedBy = narratedBy;
             this.numMinutes = numMinutes;

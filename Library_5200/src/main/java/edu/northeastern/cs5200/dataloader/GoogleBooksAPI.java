@@ -92,11 +92,11 @@ public class GoogleBooksAPI {
 
         // Retrieve JSON data
         else {
-            String result = "";
+            StringBuilder result = new StringBuilder("");
 
             Scanner sc = new Scanner(myURL.openStream());
             while (sc.hasNext()) {
-                result+=sc.nextLine();
+                result.append(sc.nextLine());
             }
 
             sc.close();
@@ -106,14 +106,14 @@ public class GoogleBooksAPI {
             JSONParser parse = new JSONParser();
 
             // Convert string object into JSON objects
-            JSONObject jObj = (JSONObject)parse.parse(result);
+            JSONObject jObj = (JSONObject)parse.parse(result.toString());
 
             // Convert JSON object into JSONArray object:
-            JSONArray jsonarr_1 = (JSONArray) jObj.get("items");
+            JSONArray jsonArray = (JSONArray) jObj.get("items");
 
             // Get data in that array
-            for (int i = 0; i < jsonarr_1.size(); i++) {
-                JSONObject book = (JSONObject) jsonarr_1.get(i);
+            for (int i = 0; i < jsonArray.size(); i++) {
+                JSONObject book = (JSONObject) jsonArray.get(i);
                 Triplet<Book, Author, JSONObject> bookAndAuthor = JSONtoBook(book);
 
                 // It will be null if there was a problem extracting any daya
@@ -235,7 +235,7 @@ public class GoogleBooksAPI {
             newBook.setId(id);
             newBook.setYearPublished(publishedDate);
             newBook.setGenre(subject);
-            newBook.setISBN(isbn);
+            newBook.setIsbn(isbn);
             newBook.setTitle(title);
             newBook.setThumbnailURL(thumbnail);
 
