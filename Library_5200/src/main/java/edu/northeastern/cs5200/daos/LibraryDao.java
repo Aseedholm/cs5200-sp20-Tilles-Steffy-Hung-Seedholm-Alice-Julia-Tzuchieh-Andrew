@@ -1,7 +1,6 @@
 package edu.northeastern.cs5200.daos;
 
 import edu.northeastern.cs5200.models.*;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -25,12 +24,12 @@ public interface LibraryDao {
     List<LegerEntry> findAllLegerEntries();
     List<Librarian> findAllLibrarians();
     List<LibraryCard> findAllLibraryCards();
-    List<Member> findAllMembers();
+    List<LibraryMember> findAllMembers();
     List<User> findAllUsers();
 
     // Finder methods -> find by ID
     Book findBookById(String id);
-    Member findMemberById(int id);
+    LibraryMember findMemberById(int id);
     Librarian findLibrarianById(int id);
     LibraryCard findLibraryCardByMemberId(int memberId);
     Author findAuthorById(Integer authorId);
@@ -38,7 +37,7 @@ public interface LibraryDao {
 
     // Finder methods -> find by some other attribute
     // >> Find single object
-    Member findMemberByUsername(String username);
+    LibraryMember findMemberByUsername(String username);
     Librarian findLibrarianByUsername(String username);
     LibraryCard findLibraryCardByMemberUsername(String memberUsername);
     Book findBookByTitle(String title);
@@ -57,7 +56,7 @@ public interface LibraryDao {
     LegerEntry createLegerEntry(LegerEntry entry);
     Librarian createLibrarian(Librarian librarian);
     LibraryCard createLibraryCard(LibraryCard card);
-    Member createMember(Member member);
+    LibraryMember createMember(LibraryMember member);
     User createUser(User user);
 
     // Specialized single-create methods
@@ -72,7 +71,7 @@ public interface LibraryDao {
     boolean deleteBookCopy(Integer bookCopyId);
 
     // More advanced methods
-    boolean hasValidLibraryCard(Member member);
+    boolean hasValidLibraryCard(LibraryMember member);
     boolean returnBook(Integer memberId, Integer bookCopyId);
 
     // To check out books
@@ -82,7 +81,6 @@ public interface LibraryDao {
     Set<AudioBook> findAvailableAudiobooks(Book book);
     Set<Object[]> seeCheckedOutBooksAllTime(Integer memberId);
     Set<Object[]> seeCheckedOutBooksCurrently(Integer memberId);
-
 
 
 }

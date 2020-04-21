@@ -3,7 +3,6 @@ package edu.northeastern.cs5200.models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
-import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.HashSet;
@@ -11,7 +10,7 @@ import java.util.Set;
 import java.util.TimeZone;
 
 @Entity
-public class Member extends User {
+public class LibraryMember extends User {
 
 
     @JsonIgnore
@@ -23,14 +22,14 @@ public class Member extends User {
 
     @OneToMany(fetch=FetchType.EAGER, cascade=CascadeType.PERSIST)
     @JoinColumn(name="sponsored_by")
-    private Set<Member> recipientsOfSponsorship;
+    private Set<LibraryMember> recipientsOfSponsorship;
 
-    public Member() {
+    public LibraryMember() {
         this.recipientsOfSponsorship = new HashSet<>();
     }
 
-    public Member(Integer id, String firstName, String lastName, String username, String password, String email,
-    		Timestamp dateOfBirth, Integer sponsoredBy, Set<Member> recipientsOfSponsorship) {
+    public LibraryMember(Integer id, String firstName, String lastName, String username, String password, String email,
+                         Timestamp dateOfBirth, Integer sponsoredBy, Set<LibraryMember> recipientsOfSponsorship) {
         super(id, firstName, lastName, username, password, email, dateOfBirth);
         this.sponsoredBy = sponsoredBy;
         this.recipientsOfSponsorship = recipientsOfSponsorship;
@@ -50,7 +49,7 @@ public class Member extends User {
         return sponsoredBy;
     }
 
-    public void setSponsor(Member sponsor) {
+    public void setSponsor(LibraryMember sponsor) {
         this.sponsoredBy = sponsor.getId();
     }
 
@@ -58,15 +57,15 @@ public class Member extends User {
         this.sponsoredBy = sponsoredBy;
     }
 
-    public Set<Member> getRecipientsOfSponsorship() {
+    public Set<LibraryMember> getRecipientsOfSponsorship() {
         return recipientsOfSponsorship;
     }
 
-    public void setRecipientsOfSponsorship(Set<Member> recipientsOfSponsorship) {
+    public void setRecipientsOfSponsorship(Set<LibraryMember> recipientsOfSponsorship) {
         this.recipientsOfSponsorship = recipientsOfSponsorship;
     }
 
-    public void addSponsorRecipient(Member recipient) {
+    public void addSponsorRecipient(LibraryMember recipient) {
         this.recipientsOfSponsorship.add(recipient);
     }
 
@@ -77,26 +76,19 @@ public class Member extends User {
     public boolean isUnderThirteen() {
 
     	TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
-    	Calendar today = Calendar.getInstance(TimeZone.getDefault());
-        Calendar minDOB = today;
+        Calendar minDOB = Calendar.getInstance(TimeZone.getDefault());
         minDOB.add(Calendar.YEAR, -13);
 
         // Just making null DOB be an adult, for convenience.
-        // TODO maybe adjust
         if (this.getDateOfBirth() == null) {
             return false;
         }
 
 
         // If it is less than zero, than this date is before the minimum DOB
-        if (this.getDateOfBirth().compareTo((minDOB.getTime())) < 0) {
-
-            // Therefore, they are at least 13 years old
-            return false;
-        }
-
+        // Therefore, they are at least 13 years old
         // If they  were born after the minimum DOB, they are indeed 13 years old
-        return true;
+        return !(this.getDateOfBirth().compareTo((minDOB.getTime())) < 0);
 
     }
 

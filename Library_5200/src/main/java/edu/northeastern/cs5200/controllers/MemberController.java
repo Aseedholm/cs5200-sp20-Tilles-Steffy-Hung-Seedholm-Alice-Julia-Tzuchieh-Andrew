@@ -5,7 +5,7 @@ import edu.northeastern.cs5200.models.LegerEntry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import edu.northeastern.cs5200.models.Member;
+import edu.northeastern.cs5200.models.LibraryMember;
 
 import java.util.List;
 import java.util.Set;
@@ -18,22 +18,22 @@ public class MemberController {
   LibraryDao libraryDao;
 
   @PostMapping("api/members")
-  public Member createMember(@RequestBody Member member) {
+  public LibraryMember createMember(@RequestBody LibraryMember member) {
     return libraryDao.createMember(member);
   }
 
   @GetMapping("/api/members")
-  public List<Member> findAllMembers() {
+  public List<LibraryMember> findAllMembers() {
     return libraryDao.findAllMembers();
   }
 
   @GetMapping("/api/members/id/{id}")
-  public Member getById(@PathVariable("id") int id) {
+  public LibraryMember getById(@PathVariable("id") int id) {
     return libraryDao.findMemberById(id);
   }
 
   @GetMapping("/api/members/username/{username}")
-  public Member getByUsername(@PathVariable("username") String username) {
+  public LibraryMember getByUsername(@PathVariable("username") String username) {
     return libraryDao.findMemberByUsername(username);
   }
 
@@ -69,6 +69,11 @@ public class MemberController {
     return libraryDao.seeCheckedOutBooksCurrently(memberId);
   }
 
+
+  @GetMapping("/api/members/{memberId}/sponsor")
+  public LibraryMember findSponsor(@PathVariable Integer memberId) {
+    return libraryDao.findSponsor(memberId);
+  }
 
 
 
