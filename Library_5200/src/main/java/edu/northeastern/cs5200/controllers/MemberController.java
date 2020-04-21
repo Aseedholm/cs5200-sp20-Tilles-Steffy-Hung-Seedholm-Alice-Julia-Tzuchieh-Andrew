@@ -53,6 +53,11 @@ public class MemberController {
     return libraryDao.checkOutAudiobook(memberId, bookId);
   }
 
+  @PostMapping("/api/members/{memberId}/return/{bookCopyId}")
+  public boolean returnBook(@PathVariable Integer memberId, @PathVariable Integer bookCopyId) {
+    return libraryDao.returnBook(memberId, bookCopyId);
+  }
+
 
   @GetMapping("/api/members/{memberId}/checked-out-all-time")
   public Set<Object[]> seeMyCheckedOutBooksAllTime(@PathVariable Integer memberId) {

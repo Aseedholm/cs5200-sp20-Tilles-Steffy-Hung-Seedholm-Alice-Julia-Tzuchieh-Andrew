@@ -452,6 +452,32 @@ public class LibraryImpl implements LibraryDao {
 
     }
 
+    @Override
+    public boolean returnBook(Integer memberId, Integer bookCopyId) {
+
+        var foundMemberInDb = memberRepository.findById(memberId);
+        var foundBookInDb = bookCopyRepository.findById(bookCopyId);
+        LegerEntry legerEntryInDb = legerEntryRepository.findByMemberIdAndBookCopyId(memberId, bookCopyId);
+
+        if (foundMemberInDb.isPresent() && foundBookInDb.isPresent() && legerEntryInDb != null ) {
+
+            // Find the book copy in the database, mark it as available, and save it
+            BookCopy bookCopy = foundBookInDb.get();
+            bookCopy.setAvailable(true);
+            bookCopyRepository.save(bookCopy);
+
+            // Find the leger entry with these two values
+            TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+            Calendar today = Calendar.getInstance(TimeZone.getDefault());
+            java.sql.Timestamp timestamp = new java.sql.Timestamp(today.getTimeInMillis());
+            legerEntryInDb.setDateReturned(timestamp);
+            legerEntryRepository.save(legerEntryInDb);
+            return true;
+        }
+
+        return false;
+
+    }
 
 
     @Override

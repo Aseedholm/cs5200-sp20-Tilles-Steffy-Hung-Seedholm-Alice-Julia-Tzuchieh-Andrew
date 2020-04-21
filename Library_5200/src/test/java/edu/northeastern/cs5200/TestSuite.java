@@ -189,7 +189,7 @@ public class TestSuite {
 	public void testLoadBooks() throws IOException, ParseException, ParserConfigurationException, XPathExpressionException, SAXException {
 		libraryDao.dropBooks();
 		GoogleBooksAPI api = new GoogleBooksAPI(libraryDao);
-		api.loadFromAPI("https://www.googleapis.com/books/v1/volumes?q=nice" +
+		api.loadFromAPI("https://www.googleapis.com/books/v1/volumes?q=cool" +
 				"&key=AIzaSyDzAEzIpOLfuwaEQcXsB-5vSN7b7lzJiMc");
 
 	}

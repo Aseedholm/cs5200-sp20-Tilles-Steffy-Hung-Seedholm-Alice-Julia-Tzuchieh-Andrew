@@ -72,6 +72,7 @@ public interface LibraryDao {
 
     // More advanced methods
     boolean hasValidLibraryCard(Member member);
+    boolean returnBook(Integer memberId, Integer bookCopyId);
 
     // To check out books
     LegerEntry checkOutBookHardCopy(Integer memberId, String bookId);
