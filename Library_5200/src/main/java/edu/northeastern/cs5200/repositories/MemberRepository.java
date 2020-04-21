@@ -1,15 +1,17 @@
 package edu.northeastern.cs5200.repositories;
 
-import edu.northeastern.cs5200.models.Member;
+import edu.northeastern.cs5200.models.LibraryMember;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.bind.annotation.PathVariable;
 
 
 @Repository
-public interface MemberRepository extends CrudRepository<Member, Integer> {
+public interface MemberRepository extends CrudRepository<LibraryMember, Integer> {
+
+    @Query("SELECT libraryMember FROM LibraryMember libraryMember  " +
+            "where libraryMember.username=:username")
+    LibraryMember findMemberByUsername(String username);
 
 
 }

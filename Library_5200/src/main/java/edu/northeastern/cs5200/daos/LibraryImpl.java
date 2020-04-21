@@ -115,8 +115,8 @@ public class LibraryImpl implements LibraryDao {
     }
 
     @Override
-    public List<Member> findAllMembers() {
-        return (List<Member>)memberRepository.findAll();
+    public List<LibraryMember> findAllMembers() {
+        return (List<LibraryMember>)memberRepository.findAll();
     }
 
     @Override
@@ -130,13 +130,16 @@ public class LibraryImpl implements LibraryDao {
     }
 
     @Override
-    public Member findMemberById(int id) {
+    public LibraryMember findMemberById(int id) {
 
-        if (memberRepository.findById(id).isEmpty()) {
-            return null;
+        var foundMember = memberRepository.findById(id);
+
+        if (foundMember.isPresent()) {
+            LibraryMember member = foundMember.get();
+            return member;
         }
 
-        return memberRepository.findById(id).get();
+        return null;
     }
 
     @Override
@@ -154,7 +157,7 @@ public class LibraryImpl implements LibraryDao {
         // Make sure member exists
     	var foundMember = memberRepository.findById(memberId);
     	if (foundMember.isPresent()) {
-    	    Member member = foundMember.get();
+    	    LibraryMember member = foundMember.get();
 
     	    // Make sure the library card exists
             var foundCard = libraryCardRepository.findById(member.getLibraryCard().getId());
@@ -194,51 +197,23 @@ public class LibraryImpl implements LibraryDao {
     }
 
     @Override
-    public Member findMemberByUsername(String username) {
-        //TODO use jpql
-        Iterable<Member> members = memberRepository.findAll();
+    public LibraryMember findMemberByUsername(String username) {
 
-        for (Member m : members) {
-            if (m.getUsername() == null) {
-                continue;
-            }
-            if (m.getUsername().equals(username)) {
-                return m;
-            }
-        }
+        return memberRepository.findMemberByUsername(username);
 
-        return null;
     }
 
     @Override
     public Librarian findLibrarianByUsername(String username) {
-        //TODO use jpql
-        Iterable<Librarian> librarians = librarianRepository.findAll();
 
-        for (Librarian l : librarians) {
-            if (l.getUsername() == null) {
-                continue;
-            }
-            if (l.getUsername().equals(username)) {
-                return l;
-            }
-        }
+        return librarianRepository.findLibrarianByUsername(username);
 
-        return null;
     }
     
     @Override
     public LibraryCard findLibraryCardByMemberUsername(String memberUsername) {
-        //TODO use jpql
-    	Iterable<Member> members = memberRepository.findAll();
+        return libraryCardRepository.findByMemberUsername(memberUsername);
 
-        for (Member m : members) {
-            if (m.getUsername().equals(memberUsername)) {
-            	return findLibraryCardByMemberId(m.getId());
-            }
-        }
-
-        return null;
     }
 
     @Override
@@ -298,7 +273,7 @@ public class LibraryImpl implements LibraryDao {
     }
 
     @Override
-    public Member createMember(Member member) {
+    public LibraryMember createMember(LibraryMember member) {
 
         // Validate sponsorship - if age is < 13, must have valid sponsor
         if (member.isUnderThirteen() ) {
@@ -316,7 +291,7 @@ public class LibraryImpl implements LibraryDao {
             // Make sure the sponsor exists in the DB
             if (sponsorFound.isPresent()) {
 
-                Member sponsor = sponsorFound.get();
+                LibraryMember sponsor = sponsorFound.get();
 
                 // Make sure the sponsor is over 13
                 if (!sponsor.isUnderThirteen()) {
@@ -336,13 +311,11 @@ public class LibraryImpl implements LibraryDao {
                 }
                 else {
                     System.out.println("Sponsor is not old enough to sponsor another library member.");
-                    // TO DO throw exception?
                     return null;
                 }
             }
             else {
                 System.out.println("Sponsor not found.");
-                // TO DO throw exception?
                 return null;
             }
         }
@@ -448,7 +421,7 @@ public class LibraryImpl implements LibraryDao {
 
 
     @Override
-    public boolean hasValidLibraryCard(Member member) {
+    public boolean hasValidLibraryCard(LibraryMember member) {
 
     	// Make sure the library card exists
         var foundCard = libraryCardRepository.findById(member.getLibraryCard().getId());
@@ -507,7 +480,7 @@ public class LibraryImpl implements LibraryDao {
 
         // Make sure the member ID and book ID are valid
         if (foundMemberInDb.isPresent() && foundBookInDb.isPresent()) {
-            Member member = foundMemberInDb.get();
+            LibraryMember member = foundMemberInDb.get();
             Book book = foundBookInDb.get();
 
             // Check that user's library card is active
@@ -550,7 +523,7 @@ public class LibraryImpl implements LibraryDao {
 
         // Make sure the member ID and book ID are valid
         if (foundMemberInDb.isPresent() && foundBookInDb.isPresent()) {
-            Member member = foundMemberInDb.get();
+            LibraryMember member = foundMemberInDb.get();
             Book book = foundBookInDb.get();
 
             // Check that user's library card is active

@@ -3,7 +3,6 @@ package edu.northeastern.cs5200.dataloader;
 
 import edu.northeastern.cs5200.daos.LibraryDao;
 import edu.northeastern.cs5200.models.*;
-import javafx.util.Pair;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -14,7 +13,6 @@ import javax.xml.xpath.XPathExpressionException;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.sql.Date;
 import org.javatuples.Triplet;
 import java.sql.Timestamp;
 import java.util.Calendar;
@@ -32,59 +30,6 @@ public class GoogleBooksAPI {
         this.libraryDao = libraryDao;
     }
 
-    /**
-     * Extracts a first name (everything up to the space)
-     */
-    private String getFirstName(String fullName) {
-
-        if (fullName==null) {
-            return "";
-        }
-
-        char[] chars = fullName.toCharArray();
-        StringBuilder firstName = new StringBuilder();
-        for (char c : chars ) {
-
-            if (c == ' ') {
-                return firstName.toString();
-            }
-
-            firstName.append(c);
-
-        }
-        return firstName.toString();
-    }
-
-
-    /**
-     * Extracts the last name (anything after the first space)
-     * @param fullName
-     * @return
-     */
-    private String getLastName(String fullName) {
-
-        if (fullName==null) {
-            return "";
-        }
-
-        char[] chars = fullName.toCharArray();
-        StringBuilder lastName = new StringBuilder();
-        boolean last = false;
-        for (char c : chars ) {
-
-            if (c == ' ' && last == false) {
-                last = true;
-                continue;
-            }
-
-            if (last) {
-                lastName.append(c);
-            }
-
-
-        }
-        return lastName.toString();
-    }
 
     /**
      * Loads into the database 0 to 6 copies of a book to the library. Up to 3 each of audiobook vs hard copy.
@@ -258,7 +203,7 @@ public class GoogleBooksAPI {
      */
     private Triplet<Book,Author,JSONObject> JSONtoBook(JSONObject inputBook) throws IOException, XPathExpressionException {
 
-        // Extracting all the info out of the JSON object //TODO extract book_copy info such as # pages
+        // Extracting all the info out of the JSON object
         try {
             JSONObject volumeInfo = (JSONObject) inputBook.get("volumeInfo");
             String id = (String) inputBook.get("id");

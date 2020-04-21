@@ -29,7 +29,7 @@ public class Book {
     private Set<BookCopy> bookCopies;
 
     @JsonIgnore
-    private String thumbnailURL; //TODO see if it's necessary to modify constructor
+    private String thumbnailURL;
 
     public Book(){
         this.bookCopies = new HashSet<>();

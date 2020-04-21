@@ -1,17 +1,12 @@
 package edu.northeastern.cs5200;
 
 import edu.northeastern.cs5200.daos.*;
-import edu.northeastern.cs5200.dataloader.GoodReadsAPI;
 import edu.northeastern.cs5200.dataloader.GoogleBooksAPI;
 import edu.northeastern.cs5200.models.*;
-import org.apache.tomcat.jni.Library;
 import org.json.simple.parser.ParseException;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
-
-import org.junit.jupiter.api.Order;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,12 +17,6 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
 import java.io.IOException;
-import java.sql.Date;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Set;
-import java.util.concurrent.locks.Condition;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -38,7 +27,7 @@ public class TestSuite {
 	@Autowired
 	LibraryImpl libraryDao;
 
-	static Member andrew, jason, julia, alice;
+	static LibraryMember andrew, jason, julia, alice;
 	static Book sapiens;
 
 //	@Test
@@ -186,7 +175,7 @@ public class TestSuite {
 //	}
 
 	@Test
-	public void testLoadBooks() throws IOException, ParseException, ParserConfigurationException, XPathExpressionException, SAXException {
+	public void testLoadBooks() throws IOException, ParseException, XPathExpressionException {
 		libraryDao.dropBooks();
 		GoogleBooksAPI api = new GoogleBooksAPI(libraryDao);
 		api.loadFromAPI("https://www.googleapis.com/books/v1/volumes?q=cool" +

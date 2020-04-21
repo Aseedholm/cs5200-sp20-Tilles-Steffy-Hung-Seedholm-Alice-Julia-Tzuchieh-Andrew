@@ -3,7 +3,6 @@ package edu.northeastern.cs5200.models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
-import java.sql.Date;
 import java.sql.Timestamp;
 
 @Entity
@@ -19,12 +18,12 @@ public class LibraryCard {
     @OneToOne
     @MapsId
     @JsonIgnore
-    private Member user;
+    private LibraryMember user;
 
 
     private Timestamp expirationDate;
 
-    public LibraryCard(Integer id, Member member, Timestamp expirationDate) {
+    public LibraryCard(Integer id, LibraryMember member, Timestamp expirationDate) {
 
         this.id = id;
         this.user = member;
@@ -43,11 +42,11 @@ public class LibraryCard {
         this.id = id;
     }
 
-    public Member getUser() {
+    public LibraryMember getUser() {
         return user;
     }
 
-    public void setUser(Member user) {
+    public void setUser(LibraryMember user) {
         this.user = user;
     }
 
