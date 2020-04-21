@@ -84,7 +84,7 @@ public interface LibraryDao {
     Set<Object[]> seeCheckedOutBooksAllTime(Integer memberId);
     Set<Object[]> seeCheckedOutBooksCurrently(Integer memberId);
 
-
+    LibraryMember findSponsor(Integer memberId);
 }
 
 

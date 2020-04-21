@@ -28,7 +28,6 @@ public class Book {
     @OneToMany(mappedBy = "book", fetch = FetchType.EAGER)
     private Set<BookCopy> bookCopies;
 
-    @JsonIgnore
     private String thumbnailURL;
 
     public Book(){
