@@ -35,12 +35,14 @@ public interface LibraryDao {
     Author findAuthorById(Integer authorId);
 
 
+
     // Finder methods -> find by some other attribute
     // >> Find single object
     LibraryMember findMemberByUsername(String username);
     Librarian findLibrarianByUsername(String username);
     LibraryCard findLibraryCardByMemberUsername(String memberUsername);
     Book findBookByTitle(String title);
+    LibraryMember findSponsor(Integer memberId);
 
     // >> Find a set of objects
     Set<HardCopyBook> findHardCopyBooksByBookId(String id);
@@ -71,7 +73,7 @@ public interface LibraryDao {
     boolean deleteBookCopy(Integer bookCopyId);
 
     // More advanced methods
-    boolean hasValidLibraryCard(LibraryMember member);
+    boolean hasInvalidLibraryCard(LibraryMember member);
     boolean returnBook(Integer memberId, Integer bookCopyId);
 
     // To check out books
