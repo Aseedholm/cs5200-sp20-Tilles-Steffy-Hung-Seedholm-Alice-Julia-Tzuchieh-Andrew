@@ -135,8 +135,7 @@ public class LibraryImpl implements LibraryDao {
         var foundMember = memberRepository.findById(id);
 
         if (foundMember.isPresent()) {
-            LibraryMember member = foundMember.get();
-            return member;
+            return foundMember.get();
         }
 
         return null;
@@ -144,11 +143,8 @@ public class LibraryImpl implements LibraryDao {
 
     @Override
     public Librarian findLibrarianById(int id) {
-        Librarian librarian = librarianRepository.findById(id).get();
-        if (librarian == null) {
-            return null;
-        }
-        return librarian;
+        var librarianInDb = librarianRepository.findById(id);
+        return librarianInDb.orElse(null);
     }
 
     @Override
@@ -161,10 +157,7 @@ public class LibraryImpl implements LibraryDao {
 
     	    // Make sure the library card exists
             var foundCard = libraryCardRepository.findById(member.getLibraryCard().getId());
-            if (foundCard.isPresent()) {
-                return foundCard.get();
-            }
-            return null;
+            return foundCard.orElse(null);
         }
 
     	return null;
@@ -175,10 +168,7 @@ public class LibraryImpl implements LibraryDao {
     public Author findAuthorById(Integer authorId) {
         var foundInDb = authorRepository.findById(authorId);
 
-        if (foundInDb.isPresent()) {
-            return foundInDb.get();
-        }
-        return null;
+        return foundInDb.orElse(null);
     }
 
     @Override
@@ -225,10 +215,7 @@ public class LibraryImpl implements LibraryDao {
     public LibraryMember findSponsor(Integer memberId) {
         Integer sponsorId = memberRepository.findSponsorId(memberId);
         var sponsorInDb = memberRepository.findById(sponsorId);
-        if (sponsorInDb.isPresent()){
-            return sponsorInDb.get();
-        }
-        return null;
+        return sponsorInDb.orElse(null);
     }
 
 
@@ -287,11 +274,9 @@ public class LibraryImpl implements LibraryDao {
 
         // Validate sponsorship - if age is < 13, must have valid sponsor
         if (member.isUnderThirteen() ) {
-            System.out.println("Attempting to create a member under thirteen.");
 
             // When creating a new member <13 years old, they must have a sponsor.
             if (member.getSponsoredBy() == null) {
-                System.out.println("You must enter a sponsor ID.");
                 return null;
             }
 
@@ -320,12 +305,10 @@ public class LibraryImpl implements LibraryDao {
                     return member;
                 }
                 else {
-                    System.out.println("Sponsor is not old enough to sponsor another library member.");
                     return null;
                 }
             }
             else {
-                System.out.println("Sponsor not found.");
                 return null;
             }
         }
@@ -387,19 +370,25 @@ public class LibraryImpl implements LibraryDao {
     @Override
     public boolean deleteAdmin(Integer id) {
 
-        if (adminRepository.findById(id).isPresent()) {
-            adminRepository.delete(adminRepository.findById(id).get());
+        var foundAdmin = adminRepository.findById(id);
+        if (foundAdmin.isPresent()) {
+            Admin admin = foundAdmin.get();
+            adminRepository.delete(admin);
             return true;
         }
+
         return false;
     }
 
     @Override
     public boolean deleteLibrarian(Integer id) {
-        if (librarianRepository.findById(id).isPresent()) {
-            librarianRepository.delete(librarianRepository.findById(id).get());
+        var foundLibrarian = librarianRepository.findById(id);
+        if (foundLibrarian.isPresent()) {
+            Librarian librarian = foundLibrarian.get();
+            librarianRepository.delete(librarian);
             return true;
         }
+
         return false;
     }
 
@@ -431,7 +420,7 @@ public class LibraryImpl implements LibraryDao {
 
 
     @Override
-    public boolean hasValidLibraryCard(LibraryMember member) {
+    public boolean hasInvalidLibraryCard(LibraryMember member) {
 
     	// Make sure the library card exists
         var foundCard = libraryCardRepository.findById(member.getLibraryCard().getId());
@@ -443,13 +432,14 @@ public class LibraryImpl implements LibraryDao {
     		cardDate.setTime(foundCard.get().getExpirationDate());
     		Calendar today = Calendar.getInstance(TimeZone.getDefault());
 
-        	return (cardDate.get(Calendar.YEAR) > today.get(Calendar.YEAR)) ||
-        			((cardDate.get(Calendar.YEAR) == today.get(Calendar.YEAR)) &&
-        					(cardDate.get(Calendar.DAY_OF_YEAR) >= today.get(Calendar.DAY_OF_YEAR)));
+        	return (cardDate.get(Calendar.YEAR) <= today.get(Calendar.YEAR)) &&
+                    ((cardDate.get(Calendar.YEAR) != today.get(Calendar.YEAR)) ||
+                            (cardDate.get(Calendar.DAY_OF_YEAR) < today.get(Calendar.DAY_OF_YEAR)));
 
-        } else {
+        }
+        else {
         	// No card
-        	return false;
+        	return true;
         }
 
     }
@@ -494,7 +484,7 @@ public class LibraryImpl implements LibraryDao {
             Book book = foundBookInDb.get();
 
             // Check that user's library card is active
-            if (!hasValidLibraryCard(member)) {
+            if (hasInvalidLibraryCard(member)) {
                 return null;
             }
 
@@ -537,7 +527,7 @@ public class LibraryImpl implements LibraryDao {
             Book book = foundBookInDb.get();
 
             // Check that user's library card is active
-            if (!hasValidLibraryCard(member)) {
+            if (hasInvalidLibraryCard(member)) {
                 return false;
             }
 
