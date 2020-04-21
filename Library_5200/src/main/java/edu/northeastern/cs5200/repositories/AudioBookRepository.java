@@ -11,7 +11,8 @@ import java.util.Set;
 public interface AudioBookRepository extends CrudRepository<AudioBook, Integer> {
 
     @Query("SELECT audioBook FROM BookCopy audioBook, Book book " +
-            "WHERE audioBook.book = book AND audioBook.class = 'audiobooks' AND audioBook.isAvailable=true")
+            "WHERE audioBook.book = book AND audioBook.class = 'audiobooks' AND audioBook.isAvailable=true " +
+            "AND book.id = :id")
     Set<AudioBook> findAvailableBooksById(String id);
 
     @Query("SELECT audioBook FROM BookCopy audioBook, Book book " +
