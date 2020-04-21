@@ -33,10 +33,10 @@ public class AuthorController {
     return libraryDao.findBooksByAuthor(authorLastName);
   }
 
-//  @GetMapping("/api/authors/{authorId}")
-//  public Author findAuthorById(@PathVariable Integer authorId) {
-//    return libraryDao.findAuthorById(authorId);
-//  }
+  @GetMapping("/api/authors/{authorId}")
+  public Author findAuthorById(@PathVariable Integer authorId) {
+    return libraryDao.findAuthorById(authorId);
+  }
 
 
 
