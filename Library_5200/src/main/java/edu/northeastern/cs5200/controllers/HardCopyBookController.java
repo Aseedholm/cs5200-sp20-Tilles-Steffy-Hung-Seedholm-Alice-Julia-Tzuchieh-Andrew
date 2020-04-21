@@ -36,5 +36,14 @@ public class HardCopyBookController {
 		return libraryDao.findHardCopyBooksByBookId(bookId);
 	}
 
+	@DeleteMapping("/api/hard-copy-books/{bookCopyId}")
+	public boolean deleteHardCopyBook(@PathVariable Integer bookCopyId) {
+		return libraryDao.deleteBookCopy(bookCopyId);
+	}
+
+	@DeleteMapping("/api/book-copies/{bookCopyId}")
+	public boolean deleteBookCopy(@PathVariable Integer bookCopyId) {
+		return libraryDao.deleteBookCopy(bookCopyId);
+	}
 
 }

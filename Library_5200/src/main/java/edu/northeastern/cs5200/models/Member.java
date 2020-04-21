@@ -14,10 +14,11 @@ import java.util.TimeZone;
 public class Member extends User {
 
 
+    @JsonIgnore
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private LibraryCard libraryCard;
 
-    @Column(name="sponsored_by", insertable=false, updatable=false)
+    @Column(name="sponsored_by", insertable=true, updatable=false)
     private Integer sponsoredBy;
 
     @OneToMany(fetch=FetchType.EAGER, cascade=CascadeType.PERSIST)
@@ -87,7 +88,7 @@ public class Member extends User {
         }
 
 
-        // If it is  less than zero, than this date is before the minimum DOB
+        // If it is less than zero, than this date is before the minimum DOB
         if (this.getDateOfBirth().compareTo((minDOB.getTime())) < 0) {
 
             // Therefore, they are at least 13 years old

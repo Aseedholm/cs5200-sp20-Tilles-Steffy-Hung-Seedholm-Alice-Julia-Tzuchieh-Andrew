@@ -33,6 +33,7 @@ public interface LibraryDao {
     Member findMemberById(int id);
     Librarian findLibrarianById(int id);
     LibraryCard findLibraryCardByMemberId(int memberId);
+//    Author findAuthorById(Integer authorId);
 
 
     // Finder methods -> find by some other attribute
@@ -68,7 +69,7 @@ public interface LibraryDao {
     boolean deleteAdmin(Integer id);
     boolean deleteLibrarian(Integer id);
     boolean deleteMember(Integer id);
-
+    boolean deleteBookCopy(Integer bookCopyId);
 
     // More advanced methods
     boolean hasValidLibraryCard(Member member);
@@ -81,6 +82,7 @@ public interface LibraryDao {
     Set<AudioBook> findAvailableAudiobooks(Book book);
     Set<Object[]> seeCheckedOutBooksAllTime(Integer memberId);
     Set<Object[]> seeCheckedOutBooksCurrently(Integer memberId);
+
 
 
 }

@@ -37,4 +37,9 @@ public class AudioBookController {
 		return libraryDao.findAudioBooksByBookId(bookId);
 	}
 
+	@DeleteMapping("/api/audio-books/{bookCopyId}")
+	public boolean deleteAudiobook(@PathVariable Integer bookCopyId) {
+		return libraryDao.deleteBookCopy(bookCopyId);
+	}
+
 }
