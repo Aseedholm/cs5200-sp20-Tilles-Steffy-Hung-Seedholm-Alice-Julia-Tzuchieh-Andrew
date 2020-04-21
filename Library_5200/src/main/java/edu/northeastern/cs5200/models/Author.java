@@ -17,7 +17,7 @@ public class Author {
     private Integer id;
     private String firstName;
     private String lastName;
-    private String penName;
+    private String hometown;
     private Timestamp dateOfBirth;
     private Timestamp dateOfDeath;
 
@@ -30,12 +30,12 @@ public class Author {
     }
 
 
-    public Author(Integer id, String firstName, String lastName, String penName,
+    public Author(Integer id, String firstName, String lastName, String hometown,
     		Timestamp dateOfBirth, Timestamp dateOfDeath, Set<Book> booksWritten) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.penName = penName;
+        this.hometown = hometown;
         this.dateOfBirth = dateOfBirth;
         this.dateOfDeath = dateOfDeath;
         this.booksWritten = booksWritten;
@@ -66,12 +66,12 @@ public class Author {
         this.lastName = lastName;
     }
 
-    public String getPenName() {
-        return penName;
+    public String getHometown() {
+        return hometown;
     }
 
-    public void setPenName(String penName) {
-        this.penName = penName;
+    public void setHometown(String penName) {
+        this.hometown = penName;
     }
 
     public Timestamp getDateOfBirth() {
@@ -98,13 +98,14 @@ public class Author {
         this.booksWritten = booksWritten;
     }
 
+
     @Override
     public String toString() {
         return "Author{" +
                 "author_id=" + id +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
-                ", penName='" + penName + '\'' +
+                ", penName='" + hometown + '\'' +
                 ", dateOfBirth=" + dateOfBirth +
                 ", dateOfDeath=" + dateOfDeath +
                 ", booksWritten=" + booksWritten +

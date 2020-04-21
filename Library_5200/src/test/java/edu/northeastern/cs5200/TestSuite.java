@@ -187,12 +187,10 @@ public class TestSuite {
 
 	@Test
 	public void testLoadBooks() throws IOException, ParseException, ParserConfigurationException, XPathExpressionException, SAXException {
-//		GoogleBooksAPI api = new GoogleBooksAPI(libraryDao);
-//		api.loadFromAPI("https://www.googleapis.com/books/v1/volumes?q=mozart" +
-//				"&key=AIzaSyDzAEzIpOLfuwaEQcXsB-5vSN7b7lzJiMc");
+		GoogleBooksAPI api = new GoogleBooksAPI(libraryDao);
+		api.loadFromAPI("https://www.googleapis.com/books/v1/volumes?q=nice" +
+				"&key=AIzaSyDzAEzIpOLfuwaEQcXsB-5vSN7b7lzJiMc");
 
-		GoodReadsAPI api = new GoodReadsAPI(libraryDao);
-		api.authorToAuthorID("Malcolm+Gladwell");
 
 	}
 

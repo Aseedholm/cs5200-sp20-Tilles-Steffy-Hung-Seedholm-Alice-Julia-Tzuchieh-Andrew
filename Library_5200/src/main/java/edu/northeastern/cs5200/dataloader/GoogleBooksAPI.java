@@ -10,6 +10,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Component;
 
+import javax.xml.xpath.XPathExpressionException;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -30,7 +31,14 @@ public class GoogleBooksAPI {
         this.libraryDao = libraryDao;
     }
 
+    /**
+     * Extracts a first name (everything up to the space)
+     */
     private String getFirstName(String fullName) {
+
+        if (fullName==null) {
+            return "";
+        }
 
         char[] chars = fullName.toCharArray();
         StringBuilder firstName = new StringBuilder();
@@ -47,14 +55,23 @@ public class GoogleBooksAPI {
     }
 
 
+    /**
+     * Extracts the last name (anything after the first space)
+     * @param fullName
+     * @return
+     */
     private String getLastName(String fullName) {
+
+        if (fullName==null) {
+            return "";
+        }
 
         char[] chars = fullName.toCharArray();
         StringBuilder lastName = new StringBuilder();
         boolean last = false;
         for (char c : chars ) {
 
-            if (c == ' ') {
+            if (c == ' ' && last == false) {
                 last = true;
                 continue;
             }
@@ -110,7 +127,7 @@ public class GoogleBooksAPI {
      * @throws IOException
      * @throws ParseException
      */
-    public void loadFromAPI(String url) throws IOException, ParseException {
+    public void loadFromAPI(String url) throws IOException, ParseException, XPathExpressionException {
 
         // Cast API call into URL object
         URL myURL = new URL(url);
@@ -151,10 +168,16 @@ public class GoogleBooksAPI {
             for (int i = 0; i < jsonarr_1.size(); i++) {
                 JSONObject book = (JSONObject) jsonarr_1.get(i);
                 Pair<Book, Author> bookAndAuthor = JSONtoBook(book);
+
+                // It will be null if there was a problem extracting any daya
+                if (bookAndAuthor == null) {
+                    continue;
+                }
                 Book newBook = bookAndAuthor.getKey();
                 Author newAuthor = bookAndAuthor.getValue();
 
                 // Save it to database
+                newBook.setAuthor(newAuthor);
                 libraryDao.createAuthor(newAuthor);
                 libraryDao.createBook(newBook);
 
@@ -166,8 +189,25 @@ public class GoogleBooksAPI {
 
         }
 
-
     }
+
+    /**
+     * Util function to translate a full name into a url-digestible name (e.g., "John Holmes -> John-Holmes")
+     */
+    private String replaceSpacesWithDashes(String input) {
+
+        StringBuilder output = new StringBuilder("");
+        for (char c : input.toCharArray()) {
+            if (c == ' ') {
+                output.append('-');
+            }
+            else {
+                output.append(c);
+            }
+        }
+        return output.toString();
+    }
+
 
     /**
      * This method takes as input a string date from Google Books API in one of these formats:
@@ -182,9 +222,9 @@ public class GoogleBooksAPI {
     private static Timestamp StringToDate(String input) {
 
         // Default values
-        Integer year = 2000;
-        Integer month = 1;
-        Integer day = 1;
+        int year = 2000;
+        int month = 1;
+        int day = 1;
 
         // Extract as much info as we can from the date
         if (input!= null) {
@@ -213,54 +253,61 @@ public class GoogleBooksAPI {
      * @param inputBook from google books API
      * @return the same info in our data model
      */
-    private Pair<Book,Author> JSONtoBook(JSONObject inputBook) {
+    private Pair<Book,Author> JSONtoBook(JSONObject inputBook) throws IOException, XPathExpressionException {
 
         // Extracting all the info out of the JSON object //TODO extract book_copy info such as # pages
-        JSONObject volumeInfo = (JSONObject) inputBook.get("volumeInfo");
-        String id = (String) inputBook.get("id");
-        JSONArray industryIdentifiers = (JSONArray) volumeInfo.get("industryIdentifiers");
-        JSONObject identifierOne = (JSONObject) industryIdentifiers.get(0);
-        String isbn = (String) identifierOne.get("identifier");
-        JSONArray subjects = (JSONArray) volumeInfo.get("categories");
-        Timestamp publishedDate = StringToDate((String)volumeInfo.get("publishedDate"));
-        String title = (String) volumeInfo.get("title");
-        String subject = "";
         try {
-            subject = (String) subjects.get(0);
+            JSONObject volumeInfo = (JSONObject) inputBook.get("volumeInfo");
+            String id = (String) inputBook.get("id");
+            JSONArray industryIdentifiers = (JSONArray) volumeInfo.get("industryIdentifiers");
+            JSONObject identifierOne = (JSONObject) industryIdentifiers.get(0);
+            String isbn = (String) identifierOne.get("identifier");
+            JSONArray subjects = (JSONArray) volumeInfo.get("categories");
+            Timestamp publishedDate = StringToDate((String)volumeInfo.get("publishedDate"));
+            String title = (String) volumeInfo.get("title");
+            String subject = "";
+            try {
+                subject = (String) subjects.get(0);
+            } catch (NullPointerException e) {
+                subject = null;
+            }
+            JSONArray authors = (JSONArray) volumeInfo.get("authors");
+            String authorFullName = "";
+            try {
+                authorFullName = (String) authors.get(0);
+            } catch (NullPointerException e) {
+                authorFullName = null;
+            }
+            JSONObject imageLinks = (JSONObject) volumeInfo.get("imageLinks");
+            String thumbnail = (String) imageLinks.get("smallThumbnail");
+
+            // Create a new book with that info
+            Book newBook = new Book();
+            newBook.setId(id);
+            newBook.setYearPublished(publishedDate);
+            newBook.setGenre(subject);
+            newBook.setISBN(isbn);
+            newBook.setTitle(title);
+            newBook.setThumbnailURL(thumbnail);
+
+            // And a new author
+            GoodReadsAPI goodReadsAPI = new GoodReadsAPI();
+            Author newAuthor = new Author();
+            if (authorFullName != null ) {
+                String goodReadsAuthorID = goodReadsAPI.authorToAuthorID(replaceSpacesWithDashes(authorFullName));
+                newAuthor = goodReadsAPI.idToAuthor(goodReadsAuthorID);
+            }
+
+            else {
+                System.out.println("Book without author?: " + newBook.getTitle());
+            }
+
+            // Return the two new objects
+            return new Pair<>(newBook,newAuthor);
         } catch (NullPointerException e) {
-            subject = null;
+            return null;
         }
-        JSONArray authors = (JSONArray) volumeInfo.get("authors");
-        String authorFullName = "";
-        String authorFirst = "";
-        String authorLast = "";
-        try {
-            authorFullName = (String) authors.get(0);
-            authorFirst = getFirstName(authorFullName);
-            authorLast = getLastName(authorFullName);
-        } catch (NullPointerException e) {
-            authorFullName = null;
-        }
-        JSONObject imageLinks = (JSONObject) volumeInfo.get("imageLinks");
-        String thumbnail = (String) imageLinks.get("smallThumbnail");
 
-        // Create a new book with that info
-        Book newBook = new Book();
-        newBook.setId(id);
-        newBook.setYearPublished(publishedDate);
-        newBook.setGenre(subject);
-        newBook.setISBN(isbn);
-        newBook.setTitle(title);
-        newBook.setThumbnailURL(thumbnail);
-
-        // And a new author
-        Author newAuthor = new Author();
-        newAuthor.setFirstName(authorFirst);
-        newAuthor.setLastName(authorLast);
-        newBook.setAuthor(newAuthor);
-
-        // Return the two new objects
-        return new Pair<>(newBook,newAuthor);
     }
 
 
