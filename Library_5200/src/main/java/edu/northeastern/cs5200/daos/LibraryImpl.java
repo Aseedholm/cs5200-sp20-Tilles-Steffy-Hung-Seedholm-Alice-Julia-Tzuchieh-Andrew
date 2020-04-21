@@ -168,6 +168,16 @@ public class LibraryImpl implements LibraryDao {
 
     }
 
+//    @Override
+//    public Author findAuthorById(Integer authorId) {
+//        var foundInDb = authorRepository.findById(authorId);
+//
+//        if (foundInDb.isPresent()) {
+//            return foundInDb.get();
+//        }
+//        return null;
+//    }
+
     @Override
     public Set<HardCopyBook> findHardCopyBooksByBookId(String id) {
         return hardCopyBookRepository.findByBookId(id);

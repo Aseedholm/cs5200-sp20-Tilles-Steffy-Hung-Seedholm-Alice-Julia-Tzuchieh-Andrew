@@ -14,10 +14,11 @@ import java.util.TimeZone;
 public class Member extends User {
 
 
+    @JsonIgnore
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private LibraryCard libraryCard;
 
-    @Column(name="sponsored_by", insertable=false, updatable=false)
+    @Column(name="sponsored_by", insertable=true, updatable=false)
     private Integer sponsoredBy;
 
     @OneToMany(fetch=FetchType.EAGER, cascade=CascadeType.PERSIST)

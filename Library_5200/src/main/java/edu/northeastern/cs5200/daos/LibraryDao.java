@@ -33,6 +33,7 @@ public interface LibraryDao {
     Member findMemberById(int id);
     Librarian findLibrarianById(int id);
     LibraryCard findLibraryCardByMemberId(int memberId);
+//    Author findAuthorById(Integer authorId);
 
 
     // Finder methods -> find by some other attribute
