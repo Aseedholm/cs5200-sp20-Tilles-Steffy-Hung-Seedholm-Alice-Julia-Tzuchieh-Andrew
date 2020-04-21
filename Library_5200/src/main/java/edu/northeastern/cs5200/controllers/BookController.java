@@ -33,4 +33,9 @@ public class BookController {
         return libraryDao.findBookByTitle(bookTitle);
     }
 
+    @GetMapping("api/books/{id}")
+    public Book findBookById(@PathVariable String id) {
+        return libraryDao.findBookById(id);
+    }
+
 }

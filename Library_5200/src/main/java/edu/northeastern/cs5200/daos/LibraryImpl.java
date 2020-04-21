@@ -126,7 +126,12 @@ public class LibraryImpl implements LibraryDao {
 
     @Override
     public Book findBookById(String id) {
-        return null;
+        try {
+            return bookRepository.findById(id).get();
+        } catch (NoSuchElementException e) {
+            return new Book();
+        }
+
     }
 
     @Override
@@ -218,7 +223,14 @@ public class LibraryImpl implements LibraryDao {
 
     @Override
     public Book findBookByTitle(String title) {
-        return bookRepository.findBookByTitle(title);
+        Book bookToReturn = bookRepository.findBookByTitle(title);
+        if (bookToReturn != null) {
+            return bookToReturn;
+        } else {
+            return new Book();
+        }
+
+
     }
 
     @Override

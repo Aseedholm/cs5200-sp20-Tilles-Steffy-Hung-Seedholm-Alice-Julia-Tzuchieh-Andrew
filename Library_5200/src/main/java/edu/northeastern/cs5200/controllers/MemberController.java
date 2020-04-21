@@ -42,7 +42,6 @@ public class MemberController {
     return libraryDao.deleteMember(id);
   }
 
-
   @PostMapping("/api/members/{memberId}/check-out/{bookId}/hard-copy")
   public LegerEntry checkOutBookHardCopy(@PathVariable Integer memberId, @PathVariable String bookId) {
     return libraryDao.checkOutBookHardCopy(memberId, bookId);
@@ -58,7 +57,6 @@ public class MemberController {
     return libraryDao.returnBook(memberId, bookCopyId);
   }
 
-
   @GetMapping("/api/members/{memberId}/checked-out-all-time")
   public Set<Object[]> seeMyCheckedOutBooksAllTime(@PathVariable Integer memberId) {
     return libraryDao.seeCheckedOutBooksAllTime(memberId);
@@ -68,7 +66,6 @@ public class MemberController {
   public Set<Object[]> seeMyCheckedOutBooksCurrently(@PathVariable Integer memberId) {
     return libraryDao.seeCheckedOutBooksCurrently(memberId);
   }
-
 
   @GetMapping("/api/members/{memberId}/sponsor")
   public LibraryMember findSponsor(@PathVariable Integer memberId) {
