@@ -1,6 +1,7 @@
 package edu.northeastern.cs5200.controllers;
 
 import edu.northeastern.cs5200.daos.LibraryDao;
+import edu.northeastern.cs5200.models.Admin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,6 +42,12 @@ public class LibrarianController {
     return libraryDao.deleteLibrarian(id);
   }
 
+
+  @PutMapping(value = "/api/librarians/{librarianId}")
+  public Librarian updateLibrarian(@PathVariable Integer librarianId, @RequestBody Librarian librarian)
+  {
+    return libraryDao.updateLibrarian(librarianId, librarian);
+  }
 
 
 

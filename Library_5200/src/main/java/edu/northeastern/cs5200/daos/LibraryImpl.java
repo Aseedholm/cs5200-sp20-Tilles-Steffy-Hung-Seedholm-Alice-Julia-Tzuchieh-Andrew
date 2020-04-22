@@ -632,5 +632,59 @@ public class LibraryImpl implements LibraryDao {
         return bookCopyRepository.findCheckedOutBooksCurrently(memberId);
     }
 
+    @Override
+    public Admin updateAdmin(Integer adminId, Admin admin) {
+        var foundUser = adminRepository.findById(adminId);
+        if (foundUser.isPresent()) {
+            Admin user = foundUser.get();
+            user.setPassword(admin.getPassword());
+            user.setUsername(admin.getUsername());
+            user.setEmail(admin.getEmail());
+            user.setLastName(admin.getLastName());
+            user.setFirstName(admin.getFirstName());
+            user.setDateOfBirth(admin.getDateOfBirth());
+            return adminRepository.save(user);
+        }
+
+        return new Admin();
+    }
+
+    @Override
+    public Librarian updateLibrarian(Integer librarianId, Librarian librarian) {
+        var foundUser = librarianRepository.findById(librarianId);
+        if (foundUser.isPresent()) {
+            Librarian user = foundUser.get();
+            user.setPassword(librarian.getPassword());
+            user.setUsername(librarian.getUsername());
+            user.setEmail(librarian.getEmail());
+            user.setLastName(librarian.getLastName());
+            user.setFirstName(librarian.getFirstName());
+            user.setDateOfBirth(librarian.getDateOfBirth());
+            user.setDateHired(librarian.getDateHired());
+            user.setHasW2OnFile(librarian.getHasW2OnFile());
+            return librarianRepository.save(user);
+        }
+
+        return new Librarian();
+    }
+
+    @Override
+    public LibraryMember updateMember(Integer memberId,  LibraryMember libraryMember) {
+        var foundUser = memberRepository.findById(memberId);
+        if (foundUser.isPresent()) {
+            LibraryMember user = foundUser.get();
+            user.setPassword(libraryMember.getPassword());
+            user.setUsername(libraryMember.getUsername());
+            user.setEmail(libraryMember.getEmail());
+            user.setLastName(libraryMember.getLastName());
+            user.setFirstName(libraryMember.getFirstName());
+            user.setDateOfBirth(libraryMember.getDateOfBirth());
+            user.setLibraryCard(libraryMember.getLibraryCard());
+            return memberRepository.save(user);
+        }
+
+        return new LibraryMember();
+    }
+
 
 }

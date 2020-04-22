@@ -39,4 +39,11 @@ public class AdminController {
   }
 
 
+  @PutMapping(value = "/api/admins/{adminId}")
+  public Admin updateAdmin(@PathVariable Integer adminId, @RequestBody Admin admin) {
+    return libraryDao.updateAdmin(adminId, admin);
+  }
+
+
+
 }

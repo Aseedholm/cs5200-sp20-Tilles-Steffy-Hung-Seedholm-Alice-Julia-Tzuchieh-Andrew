@@ -2,6 +2,7 @@ package edu.northeastern.cs5200.controllers;
 
 import edu.northeastern.cs5200.daos.LibraryDao;
 import edu.northeastern.cs5200.models.LegerEntry;
+import edu.northeastern.cs5200.models.Librarian;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -73,6 +74,10 @@ public class MemberController {
   }
 
 
+  @PutMapping(value = "/api/members/{memberId}")
+  public LibraryMember updateMember(@PathVariable Integer memberId, @RequestBody LibraryMember member) {
+    return libraryDao.updateMember(memberId, member);
+  }
 
 
 

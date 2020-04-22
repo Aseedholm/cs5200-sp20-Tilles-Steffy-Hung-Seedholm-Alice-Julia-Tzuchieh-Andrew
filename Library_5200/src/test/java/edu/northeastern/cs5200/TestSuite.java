@@ -34,12 +34,11 @@ public class TestSuite {
 	@Test
 	public void loadBooks() throws IOException, ParseException, XPathExpressionException {
 		GoogleBooksAPI api = new GoogleBooksAPI(libraryDao);
-//		api.loadBooksFromAPI("https://www.googleapis.com/books/v1/volumes?q=cool" +
-//				"&key=AIzaSyDzAEzIpOLfuwaEQcXsB-5vSN7b7lzJiMc");
+		api.loadBooksFromAPI("https://www.googleapis.com/books/v1/volumes?q=cool" +
+				"&key=AIzaSyDzAEzIpOLfuwaEQcXsB-5vSN7b7lzJiMc");
 
-		api.loadFamousBooks();
-		//api.seedDatabaseWithPopularBooks(105);
-		// api.loadTestBooks();
+//		api.loadFamousBooks();
+//		api.seedDatabaseWithPopularBooks(10);
 
 	}
 

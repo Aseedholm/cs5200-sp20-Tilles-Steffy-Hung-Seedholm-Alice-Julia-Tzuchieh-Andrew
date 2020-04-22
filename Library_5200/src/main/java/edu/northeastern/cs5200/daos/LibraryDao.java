@@ -2,6 +2,7 @@ package edu.northeastern.cs5200.daos;
 
 import edu.northeastern.cs5200.models.*;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 import java.util.Set;
@@ -84,6 +85,11 @@ public interface LibraryDao {
     Set<Object[]> seeCheckedOutBooksAllTime(Integer memberId);
     Set<Object[]> seeCheckedOutBooksCurrently(Integer memberId);
 
+
+    // Update methods
+    Admin updateAdmin(Integer adminId, @RequestBody Admin admin);
+    Librarian updateLibrarian(Integer librarianId, @RequestBody Librarian librarian);
+    LibraryMember updateMember(Integer memberId, @RequestBody LibraryMember member);
 }
 
 
