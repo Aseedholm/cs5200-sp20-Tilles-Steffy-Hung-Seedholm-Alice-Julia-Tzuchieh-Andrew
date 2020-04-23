@@ -17,10 +17,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import org.javatuples.Triplet;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 /**
  * This class queries the GoogleBooks API and converts it into our data model, and saves the data.
@@ -61,6 +58,8 @@ public class GoogleBooksAPI {
             }
         }
 
+        pruneDuplicateAuthors();
+
     }
 
 
@@ -97,6 +96,49 @@ public class GoogleBooksAPI {
             libraryDao.createAudioBook(newCopy);
 
         }
+
+    }
+
+    public void pruneDuplicateAuthors() {
+
+        List<Author> allAuthors = libraryDao.findAllAuthors();
+
+        // For each author in the DB,
+        for (Author a : allAuthors) {
+
+            // see if there is more than one.
+            List<Author> duplicateAuthors = libraryDao.findAuthorsByFullName(a.getFirstName(), a.getLastName());
+
+            // If not, continue.
+            if (duplicateAuthors.size() == 1) {
+                continue;
+            }
+
+            else {
+                // If so, get the set.
+                duplicateAuthors.remove(a);
+                for (Author duplicate : duplicateAuthors) {
+                    // Iterate through each of their books, assigning it to this original one.
+                    Set<Book> books = duplicate.getBooksWritten();
+
+                    for (Book b : books) {
+                        b.setAuthor(a);
+                        libraryDao.createBook(b);
+                    }
+
+                    // Delete the duplicate author from the  db and the set.
+                    allAuthors.remove(duplicate);
+
+                }
+            }
+
+
+        }
+
+
+
+
+
 
     }
 
@@ -149,7 +191,7 @@ public class GoogleBooksAPI {
                 JSONObject book = (JSONObject) jsonArray.get(i);
                 Triplet<Book, Author, JSONObject> bookAndAuthor = JSONtoBook(book);
 
-                // It will be null if there was a problem extracting any daya
+                // It will be null if there was a problem extracting any data
                 if (bookAndAuthor == null) {
                     continue;
                 }
@@ -159,7 +201,7 @@ public class GoogleBooksAPI {
 
                 // Save it to database
                 newBook.setAuthor(newAuthor);
-                libraryDao.createAuthor(newAuthor);
+                //libraryDao.createAuthor(newAuthor);
                 libraryDao.createBook(newBook);
 
                 // Create book copies

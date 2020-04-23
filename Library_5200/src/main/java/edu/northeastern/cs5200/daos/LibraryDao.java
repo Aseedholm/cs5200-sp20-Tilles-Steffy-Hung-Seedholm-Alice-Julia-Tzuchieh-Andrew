@@ -50,6 +50,7 @@ public interface LibraryDao {
     Set<AudioBook> findAudioBooksByBookId(String id);
     Set<Book> findBooksByAuthor(String authorName);
     Set<LibraryMember> findRecipientsOfSponsorship(Integer memberId);
+    List<Author> findAuthorsByFullName(String first, String last);
 
     // Create a single object methods
     Admin createAdmin(Admin admin);
@@ -73,6 +74,7 @@ public interface LibraryDao {
     boolean deleteLibrarian(Integer id);
     boolean deleteMember(Integer id);
     boolean deleteBookCopy(Integer bookCopyId);
+    boolean deleteAuthor(Integer id);
 
     // More advanced methods
     boolean hasInvalidLibraryCard(LibraryMember member);
@@ -91,6 +93,7 @@ public interface LibraryDao {
     Admin updateAdmin(Integer adminId, @RequestBody Admin admin);
     Librarian updateLibrarian(Integer librarianId, @RequestBody Librarian librarian);
     LibraryMember updateMember(Integer memberId, @RequestBody LibraryMember member);
+
 
 
 }

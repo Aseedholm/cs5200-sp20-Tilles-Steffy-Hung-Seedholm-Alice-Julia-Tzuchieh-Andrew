@@ -71,6 +71,7 @@ public class LibraryImpl implements LibraryDao {
         hardCopyBookRepository.deleteAll();
         audioBookRepository.deleteAll();
         bookRepository.deleteAll();
+        authorRepository.deleteAll();
 
     }
 
@@ -276,16 +277,31 @@ public class LibraryImpl implements LibraryDao {
         return audioBook;
     }
 
+
+    @Override
+    public List<Author> findAuthorsByFullName(String first, String last) {
+        return authorRepository.findAuthorByFullName(first, last);
+    }
+
+
     @Override
     public Author createAuthor(Author author) {
 
-        Author authorInDb = authorRepository.findAuthorByFullName(author.getFirstName(), author.getLastName());
-        if (authorInDb == null) {
+        //  Try to find this author in the DB (just finding duplicates based on full name, it's not perfect)
+        List<Author> authorsInDb = authorRepository.findAuthorByFullName(author.getFirstName(), author.getLastName());
+        System.out.println("Found authors matching " + author.getFirstName() +
+                " " + author.getLastName() + " :" + authorsInDb);
+
+        // If none are  found with this name, then save a new one and return it.
+        if (authorsInDb.size() == 0) {
+            System.out.println("0 found, saving: " + author);
             authorRepository.save(author);
             return author;
         }
 
-        return authorInDb;
+        // If one is found, then just return that one.
+        System.out.println("One was found. So didn't save  a new one");
+        return author;
 
     }
 
@@ -466,6 +482,18 @@ public class LibraryImpl implements LibraryDao {
 
         return false;
 
+    }
+
+    @Override
+    public boolean deleteAuthor(Integer id) {
+
+        var found = authorRepository.findById(id);
+        if (found.isPresent()) {
+            authorRepository.deleteById(id);
+            return true;
+        }
+
+        return false;
     }
 
 

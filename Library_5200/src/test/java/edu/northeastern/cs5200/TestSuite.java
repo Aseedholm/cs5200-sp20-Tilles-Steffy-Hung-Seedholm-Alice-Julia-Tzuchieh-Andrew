@@ -31,23 +31,25 @@ public class TestSuite {
 	@Autowired
 	LibraryImpl libraryDao;
 
-//	@Test
-//	public void loadBooks() throws IOException, ParseException, XPathExpressionException {
-////		GoogleBooksAPI api = new GoogleBooksAPI(libraryDao);
+	@Test
+	public void loadBooks() throws IOException, ParseException, XPathExpressionException {
+//		libraryDao.dropBooks();
+//		GoogleBooksAPI api = new GoogleBooksAPI(libraryDao);
 ////		api.loadBooksFromAPI("https://www.googleapis.com/books/v1/volumes?q=cool" +
 ////				"&key=AIzaSyDzAEzIpOLfuwaEQcXsB-5vSN7b7lzJiMc");
-////
-//////		api.loadFamousBooks();
-////		api.seedDatabaseWithPopularBooks(10);
-//
-//	}
-//
-//
+//		api.loadFamousBooks();
+//		api.seedDatabaseWithPopularBooks(100);
+//		api.pruneDuplicateAuthors();
+
+	}
+
+
 //	@Test
 //	public void loadUsers() throws java.text.ParseException {
-////		libraryDao.dropUsers();
-////		SeedDatabase seed = new SeedDatabase(libraryDao);
-////		seed.createUsers();
+//		libraryDao.dropUsers();
+//		SeedDatabase seed = new SeedDatabase(libraryDao);
+//		seed.createUsers();
+//		seed.rentBooks();
 //	}
 
 
