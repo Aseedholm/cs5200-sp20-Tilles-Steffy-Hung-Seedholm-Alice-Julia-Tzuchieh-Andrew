@@ -21,12 +21,10 @@ public class BookController {
         return libraryDao.createBook(book);
     }
 
-
     @GetMapping("api/books")
     public List<Book> findAllBooks() {
         return libraryDao.findAllBooks();
     }
-
 
     @GetMapping("api/books/title/{bookTitle}")
     public Book findBookByTitle(@PathVariable String bookTitle) {

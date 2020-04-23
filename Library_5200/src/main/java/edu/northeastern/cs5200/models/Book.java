@@ -20,7 +20,7 @@ public class Book {
 
     private String genre;
 
-    @ManyToOne
+    @ManyToOne(cascade=CascadeType.ALL)
     private Author author;
 
     @OneToMany(mappedBy = "book", fetch = FetchType.EAGER)

@@ -108,7 +108,6 @@ public class Author {
                 ", penName='" + hometown + '\'' +
                 ", dateOfBirth=" + dateOfBirth +
                 ", dateOfDeath=" + dateOfDeath +
-                ", booksWritten=" + booksWritten +
                 '}';
     }
 }

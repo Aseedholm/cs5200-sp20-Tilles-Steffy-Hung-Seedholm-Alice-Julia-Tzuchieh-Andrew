@@ -42,6 +42,12 @@ public class LibrarianController {
   }
 
 
+  @PutMapping(value = "/api/librarians/{librarianId}")
+  public Librarian updateLibrarian(@PathVariable Integer librarianId, @RequestBody Librarian librarian)
+  {
+    return libraryDao.updateLibrarian(librarianId, librarian);
+  }
+
 
 
 }

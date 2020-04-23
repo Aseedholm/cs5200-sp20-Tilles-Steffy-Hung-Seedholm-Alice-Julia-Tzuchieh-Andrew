@@ -58,7 +58,6 @@ public class LibraryImpl implements LibraryDao {
         librarianRepository.deleteAll();
         libraryCardRepository.deleteAll();
         memberRepository.deleteAll();
-        userRepository.deleteAll();
         authorRepository.deleteAll();
     }
 
@@ -72,6 +71,21 @@ public class LibraryImpl implements LibraryDao {
         hardCopyBookRepository.deleteAll();
         audioBookRepository.deleteAll();
         bookRepository.deleteAll();
+        authorRepository.deleteAll();
+
+    }
+
+
+    /**
+     * Deletes just the users from the database.
+     */
+    @Override
+    public void dropUsers(){
+
+        libraryCardRepository.deleteAll();
+        memberRepository.deleteAll();
+        adminRepository.deleteAll();
+        librarianRepository.deleteAll();
 
     }
 
@@ -133,7 +147,10 @@ public class LibraryImpl implements LibraryDao {
     @Override
     public Book findBookById(String id) {
         var foundBook = bookRepository.findById(id);
-        return foundBook.orElse(null);
+        if (foundBook.isPresent()) {
+            return foundBook.get();
+        }
+        return new Book();
 
     }
 
@@ -141,14 +158,20 @@ public class LibraryImpl implements LibraryDao {
     public LibraryMember findMemberById(int id) {
 
         var foundMember = memberRepository.findById(id);
-        return foundMember.orElse(null);
+        if (foundMember.isPresent()) {
+            return foundMember.get();
+        }
+        return new LibraryMember();
 
     }
 
     @Override
     public Librarian findLibrarianById(int id) {
         var librarianInDb = librarianRepository.findById(id);
-        return librarianInDb.orElse(null);
+        if (librarianInDb.isPresent()) {
+            return librarianInDb.get();
+        }
+        return new Librarian();
     }
 
     @Override
@@ -161,18 +184,25 @@ public class LibraryImpl implements LibraryDao {
 
     	    // Make sure the library card exists
             var foundCard = libraryCardRepository.findById(member.getLibraryCard().getId());
-            return foundCard.orElse(null);
-        }
+            if (foundCard.isPresent()) {
+                return foundCard.get();
+            }
+            return new LibraryCard();
+    	}
 
-    	return null;
+    	return new LibraryCard();
 
     }
 
     @Override
     public Author findAuthorById(Integer authorId) {
         var foundInDb = authorRepository.findById(authorId);
+        if (foundInDb.isPresent()) {
+            return foundInDb.get();
+        }
 
-        return foundInDb.orElse(null);
+        return new Author();
+
     }
 
     @Override
@@ -188,6 +218,11 @@ public class LibraryImpl implements LibraryDao {
     @Override
     public Set<Book> findBooksByAuthor(String authorLastName) {
         return bookRepository.findBooksByAuthor(authorLastName);
+    }
+
+    @Override
+    public Set<LibraryMember> findRecipientsOfSponsorship(Integer memberId) {
+        return memberRepository.findRecipientsOfSponsorship(memberId);
     }
 
     @Override
@@ -212,17 +247,21 @@ public class LibraryImpl implements LibraryDao {
 
     @Override
     public Book findBookByTitle(String title) {
-        Book bookToReturn = bookRepository.findBookByTitle(title);
-        return Objects.requireNonNullElseGet(bookToReturn, Book::new);
-
-
+        Book foundBook = bookRepository.findBookByTitle(title);
+        if (foundBook==null) {
+            return new Book();
+        }
+        return foundBook;
     }
 
     @Override
     public LibraryMember findSponsor(Integer memberId) {
         Integer sponsorId = memberRepository.findSponsorId(memberId);
         var sponsorInDb = memberRepository.findById(sponsorId);
-        return sponsorInDb.orElse(null);
+        if (sponsorInDb.isPresent()) {
+            return sponsorInDb.get();
+        }
+        return new LibraryMember();
     }
 
 
@@ -238,10 +277,32 @@ public class LibraryImpl implements LibraryDao {
         return audioBook;
     }
 
+
+    @Override
+    public List<Author> findAuthorsByFullName(String first, String last) {
+        return authorRepository.findAuthorByFullName(first, last);
+    }
+
+
     @Override
     public Author createAuthor(Author author) {
-        authorRepository.save(author);
+
+        //  Try to find this author in the DB (just finding duplicates based on full name, it's not perfect)
+        List<Author> authorsInDb = authorRepository.findAuthorByFullName(author.getFirstName(), author.getLastName());
+        System.out.println("Found authors matching " + author.getFirstName() +
+                " " + author.getLastName() + " :" + authorsInDb);
+
+        // If none are  found with this name, then save a new one and return it.
+        if (authorsInDb.size() == 0) {
+            System.out.println("0 found, saving: " + author);
+            authorRepository.save(author);
+            return author;
+        }
+
+        // If one is found, then just return that one.
+        System.out.println("One was found. So didn't save  a new one");
         return author;
+
     }
 
     @Override
@@ -284,7 +345,7 @@ public class LibraryImpl implements LibraryDao {
 
             // When creating a new member <13 years old, they must have a sponsor.
             if (member.getSponsoredBy() == null) {
-                return null;
+                return new LibraryMember();
             }
 
             // Find the sponsor in the database
@@ -314,11 +375,11 @@ public class LibraryImpl implements LibraryDao {
                     return member;
                 }
                 else {
-                    return null;
+                    return new LibraryMember();
                 }
             }
             else {
-                return null;
+                return new LibraryMember();
             }
         }
         else {
@@ -351,7 +412,7 @@ public class LibraryImpl implements LibraryDao {
             return hardCopyBook;
         }
 
-        return null;
+        return new HardCopyBook();
 
     }
 
@@ -368,7 +429,7 @@ public class LibraryImpl implements LibraryDao {
             return newBookCopy;
         }
 
-        return null;
+        return new AudioBook();
     }
 
     @Override
@@ -403,6 +464,7 @@ public class LibraryImpl implements LibraryDao {
 
         if (foundMember.isPresent()) {
             memberRepository.delete(foundMember.get());
+
             return true;
         }
         return false;
@@ -420,6 +482,18 @@ public class LibraryImpl implements LibraryDao {
 
         return false;
 
+    }
+
+    @Override
+    public boolean deleteAuthor(Integer id) {
+
+        var found = authorRepository.findById(id);
+        if (found.isPresent()) {
+            authorRepository.deleteById(id);
+            return true;
+        }
+
+        return false;
     }
 
 
@@ -482,18 +556,21 @@ public class LibraryImpl implements LibraryDao {
 
         // Make sure the member ID and book ID are valid
         if (foundMemberInDb.isPresent() && foundBookInDb.isPresent()) {
+            System.out.println("Member ID: " + memberId + " or book ID: " + bookId + " are  valid.");
             LibraryMember member = foundMemberInDb.get();
             Book book = foundBookInDb.get();
 
             // Check that user's library card is active
             if (hasInvalidLibraryCard(member)) {
-                return null;
+                System.out.println("Member has invalid library card.");
+                return new LegerEntry();
             }
 
             // Check that we have at least one copy of the book, and it is available
             Iterator<HardCopyBook> availableBooks = findAvailableHardCopies(book).iterator();
             if (!availableBooks.hasNext()) {
-                return null;
+                System.out.println("No copies are available.");
+                return new LegerEntry();
             }
 
             HardCopyBook bookToBorrow = availableBooks.next();
@@ -510,7 +587,8 @@ public class LibraryImpl implements LibraryDao {
             return newEntry;
         }
 
-        return null;
+        System.out.println("Member ID: " + memberId + " or book ID: " + bookId + " are NOT valid.");
+        return new LegerEntry();
 
     }
 
@@ -529,17 +607,20 @@ public class LibraryImpl implements LibraryDao {
 
         // Make sure the member ID and book ID are valid
         if (foundMemberInDb.isPresent() && foundBookInDb.isPresent()) {
+
             LibraryMember member = foundMemberInDb.get();
             Book book = foundBookInDb.get();
 
             // Check that user's library card is active
             if (hasInvalidLibraryCard(member)) {
+                System.out.println("That member doesn't have a good library card ");
                 return false;
             }
 
             // Check that we have at least one copy of the book, and it is available
             Iterator<AudioBook> availableBooks = findAvailableAudiobooks(book).iterator();
             if (!availableBooks.hasNext()) {
+                System.out.println("doesn't have any available copies");
                 return false;
             }
 
@@ -559,7 +640,7 @@ public class LibraryImpl implements LibraryDao {
 
             return true;
         }
-
+        System.out.println("That member/book can't be found " + memberId + " " + bookId);
         return false;
 
     }
@@ -582,6 +663,60 @@ public class LibraryImpl implements LibraryDao {
     @Override
     public Set<Object[]> seeCheckedOutBooksCurrently(Integer memberId) {
         return bookCopyRepository.findCheckedOutBooksCurrently(memberId);
+    }
+
+    @Override
+    public Admin updateAdmin(Integer adminId, Admin admin) {
+        var foundUser = adminRepository.findById(adminId);
+        if (foundUser.isPresent()) {
+            Admin user = foundUser.get();
+            user.setPassword(admin.getPassword());
+            user.setUsername(admin.getUsername());
+            user.setEmail(admin.getEmail());
+            user.setLastName(admin.getLastName());
+            user.setFirstName(admin.getFirstName());
+            user.setDateOfBirth(admin.getDateOfBirth());
+            return adminRepository.save(user);
+        }
+
+        return new Admin();
+    }
+
+    @Override
+    public Librarian updateLibrarian(Integer librarianId, Librarian librarian) {
+        var foundUser = librarianRepository.findById(librarianId);
+        if (foundUser.isPresent()) {
+            Librarian user = foundUser.get();
+            user.setPassword(librarian.getPassword());
+            user.setUsername(librarian.getUsername());
+            user.setEmail(librarian.getEmail());
+            user.setLastName(librarian.getLastName());
+            user.setFirstName(librarian.getFirstName());
+            user.setDateOfBirth(librarian.getDateOfBirth());
+            user.setDateHired(librarian.getDateHired());
+            user.setHasW2OnFile(librarian.getHasW2OnFile());
+            return librarianRepository.save(user);
+        }
+
+        return new Librarian();
+    }
+
+    @Override
+    public LibraryMember updateMember(Integer memberId,  LibraryMember libraryMember) {
+        var foundUser = memberRepository.findById(memberId);
+        if (foundUser.isPresent()) {
+            LibraryMember user = foundUser.get();
+            user.setPassword(libraryMember.getPassword());
+            user.setUsername(libraryMember.getUsername());
+            user.setEmail(libraryMember.getEmail());
+            user.setLastName(libraryMember.getLastName());
+            user.setFirstName(libraryMember.getFirstName());
+            user.setDateOfBirth(libraryMember.getDateOfBirth());
+            user.setLibraryCard(libraryMember.getLibraryCard());
+            return memberRepository.save(user);
+        }
+
+        return new LibraryMember();
     }
 
 

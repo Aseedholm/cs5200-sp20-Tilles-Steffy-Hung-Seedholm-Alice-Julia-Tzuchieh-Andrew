@@ -2,6 +2,7 @@ package edu.northeastern.cs5200.daos;
 
 import edu.northeastern.cs5200.models.*;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 import java.util.Set;
@@ -12,6 +13,7 @@ public interface LibraryDao {
 
     void truncateDatabase();
     void dropBooks();
+    void dropUsers();
 
 
     // Finder methods -> find all
@@ -47,6 +49,8 @@ public interface LibraryDao {
     Set<HardCopyBook> findHardCopyBooksByBookId(String id);
     Set<AudioBook> findAudioBooksByBookId(String id);
     Set<Book> findBooksByAuthor(String authorName);
+    Set<LibraryMember> findRecipientsOfSponsorship(Integer memberId);
+    List<Author> findAuthorsByFullName(String first, String last);
 
     // Create a single object methods
     Admin createAdmin(Admin admin);
@@ -70,6 +74,7 @@ public interface LibraryDao {
     boolean deleteLibrarian(Integer id);
     boolean deleteMember(Integer id);
     boolean deleteBookCopy(Integer bookCopyId);
+    boolean deleteAuthor(Integer id);
 
     // More advanced methods
     boolean hasInvalidLibraryCard(LibraryMember member);
@@ -82,6 +87,14 @@ public interface LibraryDao {
     Set<AudioBook> findAvailableAudiobooks(Book book);
     Set<Object[]> seeCheckedOutBooksAllTime(Integer memberId);
     Set<Object[]> seeCheckedOutBooksCurrently(Integer memberId);
+
+
+    // Update methods
+    Admin updateAdmin(Integer adminId, @RequestBody Admin admin);
+    Librarian updateLibrarian(Integer librarianId, @RequestBody Librarian librarian);
+    LibraryMember updateMember(Integer memberId, @RequestBody LibraryMember member);
+
+
 
 }
 

@@ -17,7 +17,9 @@
 
 	<properties>
 		<java.version>11</java.version>
+		<start-class>com.mkyong.SpringBootWebApplication</start-class>
 	</properties>
+
 
 	<dependencies>
 		<dependency>
@@ -71,10 +73,6 @@
 			<artifactId>json-simple</artifactId>
 			<version>1.1</version>
 		</dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-        </dependency>
 		<!-- https://mvnrepository.com/artifact/org.javatuples/javatuples -->
 		<dependency>
 			<groupId>org.javatuples</groupId>

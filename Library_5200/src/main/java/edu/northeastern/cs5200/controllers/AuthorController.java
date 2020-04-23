@@ -29,7 +29,7 @@ public class AuthorController {
   }
 
   @GetMapping("/api/authors/{authorLastName}/books")
-  public Set<Book> findBooksByauthor(@PathVariable String authorLastName) {
+  public Set<Book> findBooksByAuthor(@PathVariable String authorLastName) {
     return libraryDao.findBooksByAuthor(authorLastName);
   }
 

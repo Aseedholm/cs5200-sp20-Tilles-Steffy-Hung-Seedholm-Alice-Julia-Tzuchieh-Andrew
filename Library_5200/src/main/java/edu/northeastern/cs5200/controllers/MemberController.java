@@ -67,11 +67,22 @@ public class MemberController {
     return libraryDao.seeCheckedOutBooksCurrently(memberId);
   }
 
+
+  @GetMapping("/api/members/{memberId}/sponsor-recipients")
+  public Set<LibraryMember> findRecipientsOfSponsorship(@PathVariable Integer memberId) {
+    return libraryDao.findRecipientsOfSponsorship(memberId);
+  }
+
+
+  @PutMapping(value = "/api/members/{memberId}")
+  public LibraryMember updateMember(@PathVariable Integer memberId, @RequestBody LibraryMember member) {
+    return libraryDao.updateMember(memberId, member);
+  }
+
   @GetMapping("/api/members/{memberId}/sponsor")
   public LibraryMember findSponsor(@PathVariable Integer memberId) {
     return libraryDao.findSponsor(memberId);
   }
-
 
 
 
